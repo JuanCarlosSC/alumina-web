@@ -1,0 +1,581 @@
+<div id="variant-info">
+
+  </div>
+
+  
+  <style>
+	.pdf-wrap {
+	border: none;
+    max-width: 100%;
+    width: 100%;
+    margin: auto;
+    padding: 0 15px; /* Añadir relleno para asegurar espacio lateral */
+    box-sizing: border-box; /* Asegura que el padding no aumente el tamaño total */
+	
+	}
+
+	/* Media queries para ajustar en diferentes tamaños de pantalla */
+	@media (max-width: 600px) {
+	.pdf-wrap {
+		padding: 0 10px; /* Relleno más pequeño para pantallas pequeñas */
+		margin:0
+	}
+	}
+
+	@media (max-width: 400px) {
+		.pdf-wrap {
+			padding: 0 5px; /* Relleno aún más pequeño para pantallas muy pequeñas */
+			margin:0;
+		}
+	}
+
+
+	/* ==========================iframe================ */
+	
+	#MainContent{
+		height: 100%;
+		margin-top: 50px;
+		
+	}
+	/* [id^="shopify-section-template"] {
+		height: 100%;
+	}
+	#variant-info{
+		height: 100%;
+		
+	}
+	.pdf-wrap{
+		
+	}
+	#pdf-viewer{
+		
+		
+	} */
+
+	/* ========================================== */
+	  /* Tabla ================================================================ */
+
+	  /* general */
+	  .tbl_info_variante{
+		position: absolute;
+    	top: -500px;
+	  }
+	  table,td,th{
+		border: 1px solid black;
+  		border-collapse: collapse;
+		padding: 0 5px;
+	  }
+	  span.text-main{
+		font-weight: 600;
+	  }
+
+	  /* Header azul */
+	  .header-row{
+		color: white;
+		background: #0c92b7;
+	  }
+	  .header-row td{
+		font-weight: 600;
+	  }
+	  .header-row td:not(:first-child){
+		text-align: center;
+	  }
+
+	  /* Conteniado de la tabla */
+	  .content-row td:not(:first-child){
+		text-align: center;
+	  }
+
+  </style>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+  
+  
+  <!-- Lista de productos y variantes para facilitar el acceso desde JavaScript -->
+  <script>
+	var titulo;
+	
+	// Pasar los datos de los productos y variantes a JavaScript
+	window.products = [
+	  {% for product in collections.all.products %}
+		{
+		  title: "{{ product.title }}",
+		  variants: [
+			{% for variant in product.variants %}
+			  {
+				id: {{ variant.id }},
+				title: "{{ variant.title }}",
+				price: "{{ variant.price | money }}",
+				type_material: "{{ variant.metafields.custom.type_material | escape }}",
+				name_img_diagram: "{{ variant.metafields.custom.name_img_diagram | escape }}",
+				lstProductosRelacionados: "{{ variant.metafields.custom.related_products | escape}}",
+			  }
+			  
+			  {% if forloop.last == false %},{% endif %}
+			{% endfor %}
+		  ]
+		}
+		{% if forloop.last == false %},{% endif %}
+	  {% endfor %}
+	];
+  </script>
+  <script>
+	  // Función para obtener parámetros de la URL
+		function getUrlParameter(name) {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+			var results = regex.exec(location.search);
+			return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+
+		function asignarLetras(lista) {
+			const abecedario = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';  // Cadena con las letras de la A a la Z
+			return lista.map((elemento, indice) => {
+				return abecedario[indice] || elemento; // Si el índice excede el abecedario, mantiene el valor original
+			});
+		}
+	   
+		//Funcoin para obtener la lista de direccion grapql para los productos relacionados
+		function getUrlGraphql(str) {
+		// Elimina los caracteres no deseados al inicio y final del string
+		const cleanedStr = str.replace(/^\[&quot;|&quot;\]$/g, '');
+		
+		// Divide la cadena resultante cuando encuentre ",&quot;"
+		const resultArray = cleanedStr.split('&quot;,&quot;');
+		
+		return resultArray;
+		}
+	
+	  // Captura el ID de la variante de la URL
+	  const variantId = parseInt(getUrlParameter('variant'));
+	
+	  // Busca la variante en los productos disponibles
+	  if (variantId && window.products) {
+		let variantFound = false;
+	
+		window.products.forEach(product => {
+		  product.variants.forEach(variant => {
+			if (variant.id === variantId) {
+			  variantFound = true;
+			  titulo=product.title;
+
+
+			  
+			  	let lstInfo=variant.title.split('|');
+				let lstABC=asignarLetras(lstInfo);
+				let tdHeader=`<td>Nro. Parte</td>`;
+				for (let i = 0; i < lstABC.length-1; i++) {
+					tdHeader += `<td>${lstABC[i]}</td>`;
+				}
+
+
+				let tdInfo="";
+				for (let i = 0; i < lstInfo.length; i++) {
+					tdInfo += `
+						<td>${lstInfo[i]}</td>
+					`;
+				}
+
+
+			  // Muestra la información de la variante seleccionada
+			  document.getElementById('variant-info').innerHTML = `
+			
+			
+			  	<table id="html-table" class="tbl_info_variante">
+					
+					<tr>
+						<td colspan="${lstInfo.length}"><span class="text-main">Title: </span> <span>${product.title}</span></td>
+					</tr>
+					<tr>
+						<td colspan="${lstInfo.length}"><span class="text-main">Part Number: </span> <span>${variant.title.split('|')[0]}</span></td>
+					</tr>
+					<tr>
+						<td colspan="${lstInfo.length-1}"><span class="text-main">Material: </span> <span>${variant.type_material}</span></td>
+						<td><span class="text-main">Rev: </span> 0</td>
+					</tr>
+					<tr>
+						<td colspan="${lstInfo.length-1}"><span class="text-main">Units: </span> <span>mm</span></td>
+						<td><span class="text-main">Page: </span>1/1</td>
+					</tr>
+					<tr class="header-row">
+						${tdHeader}
+					</tr>
+					<tr class="content-row">
+						${tdInfo}
+					</tr>
+				</table>
+
+				
+				<div class="pdf-wrap">
+	  			  <!--<p> <p/>	
+				  <h2>Detalles</h2>
+				  <p><span>Producto: </span> ${product.title}</p>
+				  <p><span>Variante: </span> ${variant.title.split("|")[0]}</p> // Linea Comentada  -->
+				  {% comment %} <p>Precio: ${variant.price}</p> {% endcomment %}
+				  <iframe id="pdf-viewer" width="100%" height="800" style="border: none;" title="PDF Viewer"></iframe>
+				</div>
+			  `;
+			}
+		  });
+		});
+	
+		// Mostrar mensaje si la variante no fue encontrada
+		if (!variantFound) {
+		  document.getElementById('variant-info').innerHTML = '<p>Variante no encontrada.</p>';
+		}
+	  } else {
+		document.getElementById('variant-info').innerHTML = '<p>No se ha especificado ninguna variante.</p>';
+	  }
+	</script>
+  
+  
+
+
+  <script>
+// obtiene el elemento tabla html, el ancho y alto de la tabla
+function calcularAnchoTabla() {
+	const tableElement = document.getElementById("html-table");
+
+	// Obtener el tamaño dinámico de la tabla desde el HTML
+	const tableWidthPx = tableElement.offsetWidth; // Ancho actual de la tabla en el HTML
+	const tableHeightPx = tableElement.offsetHeight; // Altura actual de la tabla en el HTML
+
+		// Calcular el tamaño deseado en puntos basados en las dimensiones dinámicas de la tabla
+	const pixelToPtRatio = 0.3; // Relación de conversión estándar: 1 px ≈ 0.75 pt
+	const tableWidthPt = tableWidthPx * pixelToPtRatio; // Convertir el ancho a puntos
+	const tableHeightPt = tableHeightPx * pixelToPtRatio; // Convertir la altura a puntos
+
+	return {tableElement,tableWidthPt,tableHeightPt};
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const { jsPDF } = window.jspdf;
+  let orientacion='landscape';
+ 
+   
+  const doc = new jsPDF({
+	 orientation: orientacion,
+
+	})
+
+	   
+  
+	 // Datos de ejemplo para la tabla
+	const columnas = ["No. Parte", "Nombre"];
+	
+	const filas = [];
+
+	//   const doc = new jsPDF();
+
+
+	debugger;
+	const { tableElement, tableWidthPt, tableHeightPt } = calcularAnchoTabla();
+
+	const pageWidth = doc.internal.pageSize.getWidth();
+	// debugger;
+	// const { colWidths, totalTableWidth } = calcularAnchoTabla(doc,tableData123);
+	const pointStartRight=pageWidth-tableWidthPt-10;
+	
+	var defaultImageUrl = "{{ settings.no_image | file_url }}";
+  // URL de las imágenes subidas a Shopify
+  	debugger;
+  	let imageUrl1="https://cdn.shopify.com/s/files/1/0812/4353/7710/files/diagram_404.png?v=1727926694";
+	let listaGrapql;
+  	window.products.forEach(product => {
+		  product.variants.forEach(variant => {
+			if (variant.id === variantId) {
+				if(variant.name_img_diagram!==""){
+					// imageUrl1 = "{{ 'test-123.png' | file_url }}";
+					imageUrl1 = variant.name_img_diagram;
+					listaGrapql = getUrlGraphql(variant.lstProductosRelacionados);
+				}
+			}
+		  })
+	})
+
+  	const imageUrl2 = "{{ 'alumina_logo_black_blue_83aa172c-6c60-4a20-9d06-dc1b0ca264ef.png' | file_url }}";
+      
+	  
+
+		// Función para obtener todos los variantes de productos
+		async function fetchAllProductVariants(listaGrapql) {
+		for (let x = 0; x < listaGrapql.length; x++) {
+			try {
+			const data = await getProductVariantData(listaGrapql[x]);
+			const fila = [data.title, data.product.title, data.product.onlineStoreUrl];
+			filas.push(fila);
+			} catch (error) {
+			console.error('Error:', error);
+			}
+		}
+		}
+
+		// Función principal para generar el PDF
+			async function generarPDF() {
+				await fetchAllProductVariants(listaGrapql);
+
+				doc.setFontSize(10); // Tamaño de fuente pequeño
+
+				// Definir el tamaño de las celdas y las posiciones iniciales
+				const xInicial = 10; 
+				let yInicial = 151; 
+
+				// Función para medir el ancho del texto
+				function getTextWidth(text) {
+					return doc.getTextWidth(text) + 4; // Añadimos un pequeño margen
+				}
+
+				// Calculamos el ancho de cada columna
+				const anchosColumnas = columnas.map((columna, index) => {
+					let maxAncho = getTextWidth(columna);
+					filas.forEach(fila => {
+						const valor = fila[index];
+						const anchoValor = getTextWidth(valor.toString());
+						if (anchoValor > maxAncho) {
+							maxAncho = anchoValor;
+						}
+					});
+					return maxAncho;
+				});
+
+				// Guardar la posición X inicial
+				let xPos = xInicial;
+
+				// Dibujar las cabeceras
+				columnas.forEach((columna, index) => {
+					doc.setFillColor("#0C91B6");
+					doc.rect(xPos, yInicial, anchosColumnas[index], 8); // Dibuja la celda de la cabecera
+					doc.text(columna, xPos + 2, yInicial + 7); // Escribe el texto
+					xPos += anchosColumnas[index]; // Ajustar la posición X para la siguiente columna
+				});
+
+				// Dibujar las filas de datos
+				yInicial += 8; // Ajustar Y para las filas de datos
+				filas.forEach(fila => {
+					xPos = xInicial; // Reiniciar la posición X para cada fila
+					fila.forEach((valor, index) => {
+						if (index === 0 || index === 1) { // Solo las primeras dos columnas: "No. Parte" y "Nombre"
+							// Dibujar la celda
+							doc.rect(xPos, yInicial, anchosColumnas[index], 8); // Dibuja cada celda
+
+							
+							if (index === 0) {
+								doc.text(valor.toString(), xPos + 2, yInicial + 7); 
+							} else if (index === 1) { 
+								const url = fila[2]; // Obtenemos la URL (la tercera columna)
+								doc.text(valor.toString(), xPos + 2, yInicial + 7); 
+                                //doc.setTextColor(255, 0, 0);
+								
+								doc.link(xPos, yInicial, anchosColumnas[index], 8, { url: url }); // Crea el enlace en la celda
+							}
+						}
+						xPos += anchosColumnas[index]; // Ajustar la posición X para la siguiente celda
+					});
+					yInicial += 8; // Moverse hacia abajo para la siguiente fila
+				});
+			}
+
+
+		generarPDF();
+
+
+  // Función para convertir una imagen a base64
+  const toBase64 = url => fetch(url)
+    .then(response => response.blob())
+    .then(blob => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    }));
+
+  // Convertir las imágenes y generar el PDF
+  Promise.all([toBase64(imageUrl1), toBase64(imageUrl2)]).then(([imgData1, imgData2]) => {
+    const img1 = new Image();
+    const img2 = new Image();
+
+    img1.src = imgData1; //imagen de la variante 
+    img2.src = imgData2; //imagen del logo para el pdf
+
+    img1.onload = function () {
+      const img1WidthOriginal = img1.width; //Largo de la Imagen (Variante)
+      const img1HeightOriginal = img1.height; //Ancho de la Imagen (Variante)
+
+      const maxWidth1 = 180;
+      const maxHeight1 = 160;
+
+      let img1Width = img1WidthOriginal;
+      let img1Height = img1HeightOriginal;
+
+		//   if (img1WidthOriginal > maxWidth1 || img1HeightOriginal > maxHeight1)
+		//    {
+		//     const ratio1 = Math.min(maxWidth1 / img1WidthOriginal, maxHeight1 / img1HeightOriginal);
+
+		//     img1Width =Math.round(img1WidthOriginal * ratio1);
+		//     img1Height =Math.round(img1HeightOriginal * ratio1);
+		
+		//   }
+		const ancho = doc.internal.pageSize.getWidth();  // Ancho del documento
+		const heightDoc = doc.internal.pageSize.getHeight();  // Alto del documento
+		const heightTable=110;
+		const availebleSpace = heightDoc-heightTable;
+
+		if(img1HeightOriginal >availebleSpace){
+			let difference=img1HeightOriginal-availebleSpace;
+			let percentage;
+			//reducir la imagen en base al porcentje el cual es mas grande la imagen que el espacio disponible
+			percentage=Math.round((difference*100/img1HeightOriginal));
+
+            img1Height= img1HeightOriginal-difference;
+		    img1Width = Math.round(img1WidthOriginal-(percentage*img1WidthOriginal/100));
+		}
+        
+	
+	  const centeredX = (pageWidth - img1Width) / 2;
+    //   doc.text("Diagrama", 10, 10);
+      doc.addImage(imgData1, 'JPEG', centeredX, 20, img1Width, img1Height);
+
+      img2.onload = function () {
+        const img2WidthOriginal = img2.width;
+        const img2HeightOriginal = img2.height;
+
+        // Establecer un ancho máximo para imageUrl2 sin deformar
+		const maxWidth2 = 60; // Cambia este valor según lo que necesites
+        const ratio2 = maxWidth2 / img2WidthOriginal; 
+        const img2Width = maxWidth2;
+        const img2Height = img2HeightOriginal * ratio2; // Mantener la proporción
+
+
+        // const pageWidth = doc.internal.pageSize.getWidth();
+        // const rightAlignedX = pageWidth - img2Width - 10;
+        const secondImageY = 20 + img1Height + 10;
+
+        doc.addImage(imgData2, 'JPEG', pointStartRight, 134, img2Width, img2Height);
+
+        // const firstParagraphY = secondImageY + img2Height + 10;
+        // const firstParagraph = "Nombre: 1 Hinge/1 Bisagra";
+        // const firstParagraphLines = doc.splitTextToSize(firstParagraph, pageWidth - 120);
+        // doc.text(firstParagraphLines, pointStartRight, firstParagraphY, { align: "left" });
+
+        // const secondParagraphY = firstParagraphY + (firstParagraphLines.length * 5) + 5;
+        // const secondParagraph = "Material: Aleación de zinc y aluminio Aleación";
+        // const secondParagraphLines = doc.splitTextToSize(secondParagraph, pageWidth - 120);
+        // doc.text(secondParagraphLines, pointStartRight, secondParagraphY, { align: "left" });
+		// debugger;
+	
+
+		
+
+
+	// Usar html2canvas para capturar la tabla como una imagen
+	html2canvas(tableElement, {
+    scale: 4, // Ajusta este valor a 2 o 3 para aumentar la resolución
+    useCORS: true, // Permitir carga de imágenes con CORS si es necesario
+  }).then((canvas) => {
+	
+	const imgData = canvas.toDataURL("image/png");
+
+	
+
+	// Alinear la tabla en el centro del PDF
+	const pageWidth = doc.internal.pageSize.getWidth();
+	// const centerX = (pageWidth - tableWidthPt) / 2;
+	// const startY = 20; 
+	// const tableY = secondParagraphY + (secondParagraphLines.length * 5) + 5;
+	const tableY=secondImageY + img2Height + 2;
+
+	// Agregar la imagen de la tabla con el tamaño dinámico calculado
+	doc.addImage(imgData, 'PNG', pointStartRight, 151, tableWidthPt, tableHeightPt);
+       // Generar el PDF
+	   const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        document.getElementById('pdf-viewer').src = url;
+		debugger;
+		console.log( titulo);
+	   // doc.save( titulo+".pdf");
+		
+	});
+
+        // // Definición del contenido de la tabla
+        // const tableData = [
+        //   ["Columna 1", "Columna 2", "Columna 3", "Columna 4"],
+        //   ["Celda 1-1", "Celda 1-2 con texto largo", "Celda 1-3", "Celda 1-4"]
+        // ];
+
+        // // Llamar a la función para calcular los anchos de la tabla
+        // const { colWidths, totalTableWidth } = calcularAnchoTabla(doc, tableData);
+
+        // // Posicionar la tabla en función del ancho total calculado
+        // // const tableX = Math.max(pageWidth - totalTableWidth - 10, pointStartRight); // Alineación dinámica
+        // const tableY = secondParagraphY + (secondParagraphLines.length * 5) + 5;
+
+        // // Dibujar las celdas de la tabla
+        // const numRows = tableData.length; // Número de filas
+        // const cellHeight = 10;
+
+        // // Dibujar cada celda basándose en los anchos calculados
+		// debugger;
+        // for (let row = 0; row < numRows; row++) {
+        //   let cellPosX = pointStartRight;
+        //   for (let col = 0; col < colWidths.length; col++) {
+        //     const cellWidth = colWidths[col];
+        //     const cellPosY = tableY + row * cellHeight;
+
+        //     // Dibujar la celda con relleno y borde
+        //     doc.rect(cellPosX, cellPosY, cellWidth, cellHeight); // Borde de la celda
+        //     doc.text(tableData[row][col], cellPosX + 2, cellPosY + 7); // Texto dentro de la celda
+        //     cellPosX += cellWidth; // Mover la posición x al siguiente punto
+        //   }
+        // }
+
+   
+      };
+    };
+	}).catch(error => {
+		console.error("Error al convertir la imagen a base64:", error);
+	});
+	});
+
+	
+
+	async function getProductVariantData(variantId) {
+				const query = `
+			{
+			node(id: "${variantId}") {
+				... on ProductVariant {
+				id
+				title
+				product {
+					id
+					title
+					productType
+					onlineStoreUrl
+				}
+				}
+			}
+			}
+		`;
+		const response = await fetch('https://6d6410.myshopify.com/api/2024-10/graphql.json', {
+			method: 'POST',
+			headers: {
+			'Content-Type': 'application/json',
+			'X-Shopify-Storefront-Access-Token': 'db729bb8d995194f1922fe4da617ced1',
+			},
+			body: JSON.stringify({ query: query })
+		});
+
+		const data = await response.json();
+		console.log(data);
+		return data.data.node;
+	}
+		
+</script>
+	  
+

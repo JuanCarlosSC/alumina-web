@@ -1,0 +1,102 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "custom_liquid_tAzPpg": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "",
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 100
+      }
+    },
+    "newsletter_VP6Cxx": {
+      "type": "newsletter",
+      "blocks": {
+        "heading_bRxy4Q": {
+          "type": "heading",
+          "settings": {
+            "heading": "Subscribe to our emails",
+            "heading_size": "h1"
+          }
+        },
+        "paragraph_NfGNCV": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Be the first to know about new collections and exclusive offers.</p>"
+          }
+        },
+        "email_form_WE8TG8": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading_bRxy4Q",
+        "paragraph_NfGNCV",
+        "email_form_WE8TG8"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "text_V4dNx3": {
+          "type": "text",
+          "settings": {
+            "heading": "Politicas",
+            "subtext": "<ul><li>Términos y condiciones</li></ul><p></p>"
+          }
+        },
+        "text_FQDhHa": {
+          "type": "text",
+          "settings": {
+            "heading": "Conocenos",
+            "subtext": "<ul><li><a href=\"/pages/sobre-nosotros\" title=\"Sobre nosotros\">Sobre Nosotros</a></li><li><a href=\"/pages/contact\" title=\"Contacto\">Contacto</a></li></ul>"
+          }
+        }
+      },
+      "block_order": [
+        "text_V4dNx3",
+        "text_FQDhHa"
+      ],
+      "custom_css": [
+        ".footer__content-top {padding: 0;}"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1e616d86-8b38-4fda-8014-114f26aaa478",
+        "newsletter_enable": false,
+        "newsletter_heading": "Subscribe to our emails",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "payment_enable": false,
+        "show_policy": true,
+        "margin_top": 0,
+        "padding_top": 100,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "custom_liquid_tAzPpg",
+    "newsletter_VP6Cxx",
+    "footer"
+  ]
+}

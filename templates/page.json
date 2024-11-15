@@ -1,0 +1,273 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "slideshow_wFPUAD": {
+      "type": "slideshow",
+      "settings": {
+        "layout": "full_bleed",
+        "slide_height": "medium",
+        "slider_visual": "counter",
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "image_behavior": "none",
+        "show_text_below": true,
+        "accessibility_info": "Slideshow about our brand"
+      }
+    },
+    "rich_text_gAccXU": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_VfLBe7": {
+          "type": "heading",
+          "settings": {
+            "heading": "SOBRE NOSOTROS",
+            "heading_size": "h0"
+          }
+        },
+        "text_fWG3nJ": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Nos definimos como una empresa social mente responsable, que a traves de la generacion de valores a nuestros empleados y la rentabilidad encontramos lo medios para apoyar y construir las ideas de nuestros clientes.<br/></p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_VfLBe7",
+        "text_fWG3nJ"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "multicolumn_RQAyeq": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_JTdD4w": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/M.png",
+            "title": "",
+            "text": "<p>En Alúmina, nos dedicamos a apoyar a la industria en diversas aplicaciones mediante el suministro de productos esenciales para la construcción, manufactura y proyectos de ingeniería. Nuestra misión es proporcionar materiales fiables y eficaces que impulsen el éxito de nuestros clientes, asegurando la calidad y la eficiencia en cada entrega.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_wJjwxG": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/V.png",
+            "title": "",
+            "text": "<p>Ser reconocidos en el mercado por nuestra rigurosa selección de materiales y atención meticulosas a los detalles. Nos esforzamos por ofrecer soluciones que no solo satisfacen, sino que también optimizan el rendimiento rendimiento de los proyectos de nuestros clientes, establecido nuevos estándares de excelencia en la industria.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_gnx9cW": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/Va.png",
+            "title": "",
+            "text": "<p><strong>Selección</strong>: Productos seleccionados para necesidades industriales complejas.</p><p><strong>Calidad</strong>: Certificados para cumplir con normativas de calidad y resistencia.</p><p><strong>Experiencia</strong>: Equipo profesional con profundo conocimiento técnico.</p><p><strong>Compromiso</strong>: Servicio al cliente serio<br/>y profesional.</p><p></p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_JTdD4w",
+        "column_wJjwxG",
+        "column_gnx9cW"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h2",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 3,
+        "column_alignment": "left",
+        "background_style": "primary",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "rich_text_tey9xd": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_b6RtEJ": {
+          "type": "heading",
+          "settings": {
+            "heading": "Nuestra Meta",
+            "heading_size": "h2"
+          }
+        },
+        "text_QDXhHz": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Alumina se reconoce en el mercado por su rigurosa selección de materiales y su atención meticulosa a los detalles. Nos comprometemos a ofrecer soluciones que no solo satisfacen, sino que también optimizan el rendimiento de los proyectos de nuestros clientes.</p>"
+          }
+        },
+        "button_X6BB6y": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_b6RtEJ",
+        "text_QDXhHz",
+        "button_X6BB6y"
+      ],
+      "custom_css": [
+        ".rich-text__heading {color: #0c92b7;}"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "image_with_text_wrkGDg": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_BdUWpT": {
+          "type": "heading",
+          "settings": {
+            "heading": "¿Porque elegir Alumina?",
+            "heading_size": "h2"
+          }
+        },
+        "text_nteYNW": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>- Selección Especializada: </strong>Nuestra gama de productos está cuidadosamente seleccionada para satisfacer las necesidades industriales complejas.</p><p><strong>- Calidad Asegurada: </strong>Todos nuestros productos están certificados para cumplir con normativas de calidad y resistencia.</p><p><strong>- Experiencia Comprobada: </strong>Contamos con un equipo de profesionales con profundo conocimiento técnico en cada línea de productos.</p><p><strong>- Compromiso Profesional:</strong> Nos dedicamos a proporcionar un servicio al cliente que refleje nuestra seriedad y profesionalismo.</p>",
+            "text_style": "body"
+          }
+        },
+        "button_TFKWWM": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_BdUWpT",
+        "text_nteYNW",
+        "button_TFKWWM"
+      ],
+      "custom_css": [
+        ".image-with-text__heading {color: #0c92b7;}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/sobre-nosotros.jpg",
+        "height": "adapt",
+        "desktop_image_width": "small",
+        "layout": "text_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "section_color_scheme": "background-1",
+        "color_scheme": "background-1",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "rich_text_4XVXxG": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_LgmczB": {
+          "type": "heading",
+          "settings": {
+            "heading": "En Alumina, valoramos la confianza que nuestros clientes depositan en nosotros y nos esforzamos por ser una parte integral y eficaz de sus procesos industriales.",
+            "heading_size": "h2"
+          }
+        },
+        "text_8NtRFW": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<h3>En Alumina, valoramos la confianza que nuestros clientes depositan en nosotros y nos esforzamos por ser una parte integral y eficaz de sus procesos industriales.</h3>"
+          }
+        },
+        "button_n93LPm": {
+          "type": "button",
+          "disabled": true,
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_LgmczB",
+        "text_8NtRFW",
+        "button_n93LPm"
+      ],
+      "custom_css": [
+        ".rich-text__heading {color: #0c92b7;}"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "main",
+    "slideshow_wFPUAD",
+    "rich_text_gAccXU",
+    "multicolumn_RQAyeq",
+    "rich_text_tey9xd",
+    "image_with_text_wrkGDg",
+    "rich_text_4XVXxG"
+  ]
+}

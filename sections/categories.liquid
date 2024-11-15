@@ -1,0 +1,528 @@
+{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'categories-events.js' | asset_url | script_tag }}
+
+{%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top:0px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+     /* ========================================== */
+    .wrap-categories{
+      display: flex;
+      gap: 25px;
+
+
+    }
+    .wrap-filters{
+     display:none;
+    }
+
+
+    .wrap-filters h2{
+      margin:0;
+      font-weight: 600;
+      color: #0c92b7;
+    }
+    .wrap-filters hr{
+      margin: 10px 0px 0 0;
+      background: #0c92b7;
+
+    }
+    .wrap-filters ul{
+      list-style: none;
+      padding: 0;
+      width: 250px;
+
+    }
+    .wrap-filters ul li{
+      margin-bottom: 5px;
+      padding: 5px;
+    }
+    .wrap-filters ul li:hover{
+      background: #e3e3e3;
+    }
+    .wrap-filters ul li a{
+      color: dimgrey;
+      text-decoration: none;
+      font-weight: 100;
+    }
+
+
+    /* ========================================== */
+    .wrap-categories-img{
+      display: flex;
+      gap: 1.3rem;
+      flex-wrap: wrap;
+      margin-top: 42px;
+      justify-content:center;
+      margin-left:20px;
+
+    }
+    .wrap-categories-img .card-categories{
+      height:auto;
+      cursor: pointer;
+    }
+
+    .wrap-categories-img .card-categories:hover h3{
+      border: 2px solid #005E79; /* Establecer el borde */
+      border-top:none;
+    }
+    .wrap-categories-img .card-categories:hover img{
+      border: 2px solid #005E79; /* Establecer el borde */
+      border-bottom:none;
+     }
+     .box .card-categories{
+
+     }
+
+     /*categoria-inicio*/
+    .wrap-categories-img .card-categories img{
+      width: 16rem;
+      height: 12rem;
+      object-fit: cover;
+      border-top-left-radius: 8px 8px;
+      border-top-right-radius: 8px 8px;
+
+      background-color:#1f1f1f;
+    }
+    .wrap-categories-img .card-categories h3{
+      width: 16rem;
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 0;
+
+    } 
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  /* *******************************************************************/
+    .container-info{
+      /* background-color: #E8E8E8;    */
+      margin:0;
+
+    }
+    .container-info1{
+       display:grid;
+       grid-template-columns: repeat(4, 400px);
+       justify-content: center; /* Centra las columnas del grid */
+       align-items: center; /* Centra los elementos verticalmente */
+       justify-items: center; /* Centra los elementos horizontalmente */
+       gap:5rem;
+       background-color: white;
+
+    }
+
+    .container-info1-col{
+      text-align: center;
+      font-size: 1em;
+      font-weight: normal;
+      margin:1.8rem;
+    }
+    .imgs{
+
+      width: 40px;
+      height: 40px;
+      display: block;
+      margin: 0 auto; /* Centra la imagen */
+    }
+    .contain-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+      font-family: "Gill Sans Extrabold", Helvetica"
+
+    }
+    .contain-content {
+      font-size: 1.3rem;
+      color: #666;
+    }
+
+    .box img {
+      display: block;
+      margin: 0;
+      box-shadow: -4px 7px 43px -10px rgba(0,0,0,0.15);
+    }
+    .box{
+
+    }
+
+    .box h3 {
+      border-bottom-left-radius:8px 8px;
+      border-bottom-right-radius:8px 8px;
+      margin: 0;
+      background-color:#0E93B6;
+      color:white;
+
+    }
+
+ 
+
+
+
+    p{
+        margin: 0;
+        padding: 0;
+    }
+{%- endstyle -%}
+
+{% comment %} <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script> {% endcomment %}
+{%- liquid
+  assign columns_mobile_int = section.settings.columns_mobile | plus: 0
+  assign show_mobile_slider = false
+  if section.settings.swipe_on_mobile and section.blocks.size > columns_mobile_int
+    assign show_mobile_slider = true
+  endif
+-%}
+{% comment %} {{ collections | json }} {% endcomment %}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="collection-list-wrapper page-width isolate{% if show_mobile_slider %} page-width-desktop{% endif %}{% if section.settings.title == blank %} no-heading{% endif %}{% if section.settings.show_view_all == false or section.blocks.size > collections.size %} no-mobile-link{% endif %} section-{{ section.id }}-padding">
+    {%- unless section.settings.title == blank -%}
+      <div class="title-wrapper-with-link{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
+        <h2
+          id="SectionHeading-{{ section.id }}"
+          class="collection-list-title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+        >
+          {{ section.settings.title }}
+        </h2>
+
+        {%- if section.settings.show_view_all and show_mobile_slider -%}
+          <a
+            href="{{ routes.collections_url }}"
+            id="ViewAll-{{ section.id }}"
+            class="link underlined-link large-up-hide{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            aria-labelledby="ViewAll-{{ section.id }} SectionHeading-{{ section.id }}"
+          >
+            {{- 'sections.collection_list.view_all' | t -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+    <div class="titulo" style="margin:0; padding:0;">
+
+    </div>
+    <hr style="margin:0;">
+
+    <div class="wrap-categories">
+      <div class="wrap-filters" id="hideit">
+        <h2 id="Title-cat">Categorias</h2>
+        <hr>
+        <ul>
+          {%- for collection in collections -%}
+            <li>
+              <a href="/collections/{{collection.handle}}">{{ collection.title }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+       
+      <div class="wrap-categories-img scroll-trigger animate--slide-in" id="box2-categoria">
+        
+        {%- for collection in collections -%}
+          
+          <div class="box">
+            <div class="card-categories" onclick="window.location.href = '/collections/{{collection.handle}}';">
+              <img
+                src="{{ collection.image.src | image_url: width: 200}}"
+
+                alt=""
+                height="{{ block.settings.collection.featured_image.height }}"
+                width="{{ block.settings.collection.featured_image.width }}"
+                loading="lazy"
+                class="motion-reduce"
+              >
+              {% comment %}
+                {%- for block in section.blocks -%}
+                  {{ block.settings.collection.featured_image | json }}
+                {%- endfor -%}
+              {% endcomment %}
+
+              <h3>{{ collection.title }}</h3>
+            </div>
+          </div>
+
+        {%- endfor -%}
+      </div>
+      <slider-component class="slider-mobile-gutter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        <ul
+          class="collection-list contains-card contains-card--collection{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down{% if section.settings.swipe_on_mobile %} slider slider--tablet grid--peek{% endif %} collection-list--{{ section.blocks.size }}-items"
+          id="Slider-{{ section.id }}"
+          role="list"
+        >
+          {%- liquid
+            assign columns = section.blocks.size
+            if columns > 3
+              assign columns = 3
+            endif
+          -%}
+          {%- for block in section.blocks -%}
+            <li
+              id="Slide-{{ section.id }}-{{ forloop.index }}"
+              class="collection-list__item grid__item{% if show_mobile_slider %} slider__slide{% endif %}{% if block.settings.collection.featured_image == nil %} collection-list__item--no-media{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {{ block.shopify_attributes }}
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+                style="--animation-order: {{ forloop.index }};"
+              {% endif %}
+            >
+              {%- assign placeholder_image_index = forloop.index0 | modulo: 4 | plus: 1 -%}
+              {%- assign placeholder_image = 'collection-apparel-' | append: placeholder_image_index -%}
+              {% render 'card-collection',
+                card_collection: block.settings.collection,
+                media_aspect_ratio: section.settings.image_ratio,
+                columns: columns,
+                placeholder_image: placeholder_image
+              %}
+            </li>
+          {%- endfor -%}
+        </ul>
+        {%- if show_mobile_slider -%}
+          <div class="slider-buttons no-js-hidden">
+            <button
+              type="button"
+              class="slider-button slider-button--prev"
+              name="previous"
+              aria-label="{{ 'general.slider.previous_slide' | t }}"
+            >
+              {% render 'icon-caret' %}
+            </button>
+            <div class="slider-counter caption">
+              <span class="slider-counter--current">1</span>
+              <span aria-hidden="true"> / </span>
+              <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+              <span class="slider-counter--total">{{ section.blocks.size }}</span>
+            </div>
+            <button
+              type="button"
+              class="slider-button slider-button--next"
+              name="next"
+              aria-label="{{ 'general.slider.next_slide' | t }}"
+            >
+              {% render 'icon-caret' %}
+            </button>
+          </div>
+        {%- endif -%}
+      </slider-component>
+    </div>
+    {%- if section.settings.show_view_all and section.blocks.size < collections.size -%}
+      <div
+        class="center collection-list-view-all{% if show_mobile_slider %} small-hide medium-hide{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+        {% if settings.animations_reveal_on_scroll %}
+          data-cascade
+        {% endif %}
+      >
+        <a
+          href="{{ routes.collections_url }}"
+          class="button"
+          id="ViewAllButton-{{ section.id }}"
+          aria-labelledby="ViewAllButton-{{ section.id }} SectionHeading-{{ section.id }}"
+        >
+          {{- 'sections.collection_list.view_all' | t -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+<!--  -->
+{% comment %}
+  <div class="container-info">
+    <div class="container-info1">
+          <div class="container-info1-col">
+            <img class="imgs" src="{{ 'tracktransport.png' | asset_url }}" alt="Envios Seguro">
+              <p class="contain-title">Envio Seguros</p>
+              <p class="contain-content">Evios a todo</p>
+              <p class="contain-content">Mexico</p>
+          </div>
+          <div class="container-info1-col">
+              <img class="imgs" src="{{ 'return_box.png' | asset_url }}" alt="Envios Seguro">
+              <p class="contain-title">Facil devolucion</p>
+              <p class="contain-content">Politica de devolucion</p>
+              <p class="contain-content">de 5 dias Habiles</p>
+          </div>
+          <div class="container-info1-col" id="img-paypal">
+            <img class="imgs" src="{{ 'card.png' | asset_url }}" alt="Envios Seguro">
+            <p class="contain-title">Pago Seguro</p>
+            <p class="contain-content">Contamos con Paypal</p>
+            <p class="contain-content">mayor Seguridad</p>
+          </div>
+          <div class="container-info1-col">
+            <img class="imgs" src="{{ 'Service.png' | asset_url }}" alt="Envios Seguro">
+            <p class="contain-title">Soporte</p>
+            <p class="contain-content">L-V 8:00 a.m - 8:00 p.m</p>
+            <p class="contain-content">Sab. 8:00 a.m - 5:00 p.m</p>
+          </div>
+    </div>
+    <div class="container-info-2">
+
+    </div>
+  </div>
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "t:sections.categories.name",
+  "tag": "section",
+  "class": "section section-collection-list",
+  "max_blocks": 4,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "default": "Collections",
+      "label": "t:sections.categories.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.categories.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.categories.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.categories.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "square",
+      "label": "t:sections.categories.settings.image_ratio.label",
+      "info": "t:sections.categories.settings.image_ratio.info"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3,
+      "label": "t:sections.categories.settings.columns_desktop.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "background-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "default": false,
+      "label": "t:sections.categories.settings.show_view_all.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.categories.settings.header_mobile.content"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.categories.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.categories.settings.columns_mobile.options__2.label"
+        }
+      ],
+      "default": "1",
+      "label": "t:sections.categories.settings.columns_mobile.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "swipe_on_mobile",
+      "default": false,
+      "label": "t:sections.categories.settings.swipe_on_mobile.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_collection",
+      "name": "t:sections.categories.blocks.featured_collection.name",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.categories.blocks.featured_collection.settings.collection.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.categories.presets.name",
+      "blocks": [
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

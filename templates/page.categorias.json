@@ -1,0 +1,273 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "slideshow_MVHYwD": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_kTmLam": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMAGEN_2.jpg",
+            "heading": "Image slide",
+            "heading_size": "h1",
+            "subheading": "Tell your brand's story through images",
+            "button_label": "Button label",
+            "link": "",
+            "button_style_secondary": false,
+            "box_align": "middle-center",
+            "show_text_box": true,
+            "text_alignment": "center",
+            "image_overlay_opacity": 0,
+            "color_scheme": "background-1",
+            "text_alignment_mobile": "center"
+          }
+        },
+        "slide_NfUqCU": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMAGEN_1.jpg",
+            "heading": "asdasd",
+            "heading_size": "h1",
+            "subheading": "asdas",
+            "button_label": "asdasd",
+            "link": "",
+            "button_style_secondary": false,
+            "box_align": "middle-center",
+            "show_text_box": true,
+            "text_alignment": "center",
+            "image_overlay_opacity": 0,
+            "color_scheme": "",
+            "text_alignment_mobile": "center"
+          }
+        },
+        "slide_hFHtWa": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/IMAGEN_3.jpg",
+            "heading": "Image slide",
+            "heading_size": "h1",
+            "subheading": "Tell your brand's story through images",
+            "button_label": "Button label",
+            "link": "",
+            "button_style_secondary": false,
+            "box_align": "middle-center",
+            "show_text_box": true,
+            "text_alignment": "center",
+            "image_overlay_opacity": 0,
+            "color_scheme": "",
+            "text_alignment_mobile": "center"
+          }
+        }
+      },
+      "block_order": [
+        "slide_kTmLam",
+        "slide_NfUqCU",
+        "slide_hFHtWa"
+      ],
+      "custom_css": [
+        ".slider-counter__link--active .dot {background: #0c92b7; border-color: #0c92b7;}",
+        ".slideshow__text-wrapper.banner__content {display: none;}"
+      ],
+      "settings": {
+        "layout": "grid",
+        "slide_height": "adapt_image",
+        "slider_visual": "dots",
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "image_behavior": "none",
+        "show_text_below": true,
+        "accessibility_info": "Slideshow about our brand"
+      }
+    },
+    "collection_list_QyHTey": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_9AXHpH": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tuercas-y-tornillos"
+          }
+        },
+        "featured_collection_zfiaAf": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_F9FpEe": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_9ehifc": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_ejRhmj": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_fBzqbg": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_n9feqq": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_EzXDwr": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_XVgpba": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_Jpybjq": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_JCydkw": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_C8cbjR": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_JUgTwk": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_R9QpzC": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        },
+        "featured_collection_zmwE38": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_9AXHpH",
+        "featured_collection_zfiaAf",
+        "featured_collection_F9FpEe",
+        "featured_collection_9ehifc",
+        "featured_collection_ejRhmj",
+        "featured_collection_fBzqbg",
+        "featured_collection_n9feqq",
+        "featured_collection_EzXDwr",
+        "featured_collection_XVgpba",
+        "featured_collection_Jpybjq",
+        "featured_collection_JCydkw",
+        "featured_collection_C8cbjR",
+        "featured_collection_JUgTwk",
+        "featured_collection_R9QpzC",
+        "featured_collection_zmwE38"
+      ],
+      "disabled": true,
+      "settings": {
+        "title": "Categorias",
+        "heading_size": "h2",
+        "image_ratio": "square",
+        "columns_desktop": 5,
+        "color_scheme": "background-1",
+        "show_view_all": true,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 8,
+        "padding_bottom": 20
+      }
+    },
+    "categories_hdqUaT": {
+      "type": "categories",
+      "blocks": {
+        "featured_collection_tNcw7h": {
+          "type": "featured_collection",
+          "disabled": true,
+          "settings": {
+            "collection": "tuercas-y-tornillos"
+          }
+        },
+        "featured_collection_niYwtC": {
+          "type": "featured_collection",
+          "disabled": true,
+          "settings": {
+            "collection": "fijaciones-y-uniones"
+          }
+        },
+        "featured_collection_mNbFCm": {
+          "type": "featured_collection",
+          "disabled": true,
+          "settings": {
+            "collection": "tubos-mangueras-y-accesorios"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_tNcw7h",
+        "featured_collection_niYwtC",
+        "featured_collection_mNbFCm"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 5,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "slideshow_MVHYwD",
+    "collection_list_QyHTey",
+    "categories_hdqUaT"
+  ]
+}

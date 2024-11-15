@@ -1,0 +1,586 @@
+{% comment %}
+  Renders product variant-picker
+
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
+  - update_url: {Boolean} whether or not to update url when changing variants. If false, the url isn't updated. Default: true (optional).
+  Usage:
+  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+<style>
+   #AddMultiCart{
+     width: 100%;
+     background: white;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     border: 1px solid black;
+     cursor: pointer;
+     color: rgb(18 18 18);
+     font-size: 1.5rem;
+     letter-spacing: .1rem;
+     line-height: 43px;
+     margin-top: 30px;
+	 max-width: 250px;
+	 margin-left: auto;
+	 margin-right: auto;
+   }
+   button#AddMultiCart:active {
+     background: #dfdfdf;
+   }
+
+
+   table.fold-table > tbody > tr.view td:first-child,
+   table.fold-table > tbody > tr.view th:first-child {
+     position: relative;
+     padding-left: 20px;
+   }
+   {% comment %} table.fold-table > tbody > tr.view td:first-child:before,
+   table.fold-table > tbody > tr.view th:first-child:before {
+     position: absolute;
+     top: 50%;
+     left: 5px;
+     width: 9px;
+     height: 16px;
+     margin-top: -8px;
+     font: 16px fontawesome;
+     color: #999;
+     content: "\27A4";
+     transition: all .3s ease;
+   } {% endcomment %}
+
+   table.fold-table > tbody > tr.view:nth-child(4n-1) {
+     background: #eee;
+   }
+   {% comment %} table.fold-table > tbody > tr.view:hover {
+     background: #000;
+   } {% endcomment %}
+   table.fold-table > tbody > tr.view.open {
+     {% comment %} background: tomato;
+     color: white; {% endcomment %}
+   }
+   table.fold-table > tbody > tr.view.open td:first-child:before,
+   table.fold-table > tbody > tr.view.open th:first-child:before {
+     transform: rotate(-180deg);
+     color: #333;
+   }
+   table.fold-table > tbody > tr.fold {
+     {% comment %} display: none; {% endcomment %}
+
+     {% comment %} max-height: 0px;
+     overflow: hidden;
+     display: block;
+     transition: max-height 0.5s ease; {% endcomment %}
+   }
+   table.fold-table > tbody > tr.fold.open {
+     {% comment %} display: table-row; {% endcomment %}
+   }
+
+   .fold td{
+     border: 0;
+     padding: 0;
+   }
+   .fold-content {
+     {% comment %} padding: .5em; {% endcomment %}
+  max-height: 0px;
+     overflow: hidden;
+     display: block;
+     transition: max-height 0.5s ease;
+   }
+   .fold-content.open {
+     padding: 15px;
+     border: 1px solid #dddddd;
+     max-height: 1000px!important;
+     {% comment %} max-height: 1000px; {% endcomment %}
+   }
+   {% comment %} .fold-content h3 { margin-top: 0; } {% endcomment %}
+   {% comment %} .fold-content > table {
+     border: 2px solid #ccc;
+   } {% endcomment %}
+   {% comment %} .fold-content > table > tbody > tr:nth-child(even) {
+     background: #eee;
+   } {% endcomment %}
+
+   {% comment %} table.fold-table > tbody > tr.fold:not(.open) {
+
+   }
+   .fold{
+
+   } {% endcomment %}
+
+   /*columna de cantidaddes*/
+   .custom-input {
+    display: flex;
+    align-items: center;
+	  background:#fdfafa; /*Se cambio de Blanco a #dddd*/
+    justify-content:space-between;
+    margin: 5px;
+    cursor: de;
+}
+
+input[type="number"] {
+    {% comment %} width: 60px; {% endcomment %}
+    text-align: center;
+    background-color:#fdfafa;
+    width:1rem;
+      /*Cambio de color */
+    {% comment %} border: 1px solid #ccc; {% endcomment %}
+    {% comment %} border-radius: 0; {% endcomment %}
+    {% comment %} margin: 0 5px; {% endcomment %}
+    -moz-appearance: textfield;
+   
+}
+
+.custom-input input[type="number"]::-webkit-outer-spin-button,
+.custom-input input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    
+}
+
+.btn-decrement{
+	background: transparent;
+  border: 0;
+  font-size: 25px;
+  padding: 0 10px 0 15px;
+  color: #747474;
+  cursor: pointer;
+}
+.btn-increment{
+	background: transparent;
+  border: 0;
+  font-size: 20px;
+  padding: 0 15px 0 10px;
+  color: #747474;
+  cursor: pointer;
+}
+.quantity{
+	border: 0;
+    padding: 0;
+    margin: 0;
+    color: #747474;
+    font-size: 18px;
+    width: 100%;
+}
+.quantity:focus-visible{
+	outline: none;
+    box-shadow: none;
+}
+{% comment %} .btn-decrement,
+.btn-increment {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+} {% endcomment %}
+
+{% comment %} .btn-decrement:hover,
+.btn-increment:hover {
+    background-color: #ddd;
+} {% endcomment %}
+
+</style>
+
+
+
+{{ 'product.js' | asset_url | script_tag }}
+{%- unless product.has_only_default_variant -%}
+
+  {%- if block.settings.picker_type == 'button' -%}
+    
+      {% comment %} <div>{{product|json }}</div> {% endcomment %}
+
+    <div class="table-container">
+
+       <table width="100%" id="tblProducts" class="fold-table">
+ 
+         <tbody id="ts">
+           {% comment %} {{ product.variants[0].title  | split: '|' }} {% endcomment %}
+           {% assign lstColumns = product.variants[0].title | split: '|' %}
+           <tr style="height: 40px;">
+             {% for prop in lstColumns %}
+               {% if forloop.first %}
+                 
+                 <th style="height: 40px; width: 67px; padding-right: 8px;">Imagen</th>
+                 <th style="height: 40px; width: 160px;">No. Parte</th> <!--Cambio lde encabezado "Numero de parte" a "No. Parte"-->
+                 <th style="height: 40px; width: 67px; padding-right: 8px;text-align: center;">PDF</th> <!--Cambio lde encabezado "Detalles" a "Docs."-->
+                 <th style="height: 40px; width: 67px; padding-right: 8px;text-align: center;">3D</th> <!--Cambio lde encabezado "Detalles" a "Docs."-->
+                 {% comment %}
+                   {% elsif forloop.last %}
+                   <th style="height: 40px; width: 70px;">kg</th>
+                 {% endcomment %}
+                   {% assign num =65 %}
+                   {% assign adjusted_length = forloop.length | minus: 1 %}
+                   {% elsif forloop.index <= adjusted_length  %}  
+                     <th style="height: 40px; width: 60px;text-align: center;">&#{{num}}</th>
+                     {% assign num = num | plus: 1 %}
+                   {% endif %}
+                   {% if forloop.index == forloop.length %}
+                     <th style="height: 40px; width: 60px;text-align: center;">kg</th>
+                   {% endif %}
+                     
+             {% endfor %}
+             <th style="height: 40px; text-align: center;padding-left: 5px;padding-right: 5px;">Precio</th>
+             <th style="height: 40px; text-align: center;padding-left: 5px;padding-right: 5px;">Cantidad</th>
+           </tr>
+           {% for variant in product.variants %}
+             {% assign lstProps = variant.title | split: '|' %}
+             <!--Tomamos el ID de cada variable encontrada Para Cada Producto (TblProduct)-->
+             {%assign idProductsVariants= variant.id | default: '' %}
+ 
+             {% assign nVariant = forloop.index %}
+             <tr style="height: 40px;" class="view">
+               {% for prop in lstProps %}
+                 {% if forloop.first %}
+                   
+                   <td>
+                     <variant-radios
+                       id="variant-radios-{{ section.id }}"
+                       class="no-js-hidden"
+                       data-section="{{ section.id }}"
+                       data-url="{{ product.url }}"
+                       {% if update_url == false %}
+                         data-update-url="false"
+                       {% endif %}
+                       {{ block.shopify_attributes }}
+                     >
+                   
+                         {%- for option in product.options_with_values -%}
+                           <fieldset class="js product-form__input">
+                             <legend class="form__label">
+                               {% comment %} {{ option.name }} {% endcomment %}
+                             </legend>
+                             {%- liquid
+                               assign variants_available_arr = product.variants | map: 'available'
+                               assign variants_option1_arr = product.variants | map: 'option1'
+                               assign variants_option2_arr = product.variants | map: 'option2'
+                               assign variants_option3_arr = product.variants | map: 'option3'
+                             
+                               assign product_form_id = 'product-form-' | append: section.id
+                             -%}
+                             
+                             {%- for value in option.values -%}
+                               {%- liquid
+                                 assign option_disabled = true
+                             
+                                 for option1_name in variants_option1_arr
+                                   case option.position
+                                     when 1
+                                       if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                         assign option_disabled = false
+                                       endif
+                                     when 2
+                                       if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                         assign option_disabled = false
+                                       endif
+                                     when 3
+                                       if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                         assign option_disabled = false
+                                       endif
+                                   endcase
+                                 endfor
+                               -%}
+                             
+                               {%- if block.settings.picker_type == 'button' -%}
+                                 {%- if nVariant==forloop.index -%}
+                                   <input
+                                     type="radio"
+                                     id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                                     name="{{ option.name }}"
+                                     value="{{ value | escape }}"
+                                     form="{{ product_form_id }}"
+                                     {% if option.selected_value == value %}
+                                       checked
+                                     {% endif %}
+                                     {% if option_disabled %}
+                                       class="disabled"
+                                     {% endif %}
+                                   >
+ 
+                                     
+ 
+                                    <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" style="cursor: pointer;">
+                                     <img  
+                                       id="variant-image"
+                                       src="{{ variant.featured_image | img_url: '50x' }}" 
+                                       alt="{{ variant.title }}" 
+                                     />
+                                     {% comment %} {{ value -}} {% endcomment %}
+                                     <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
+                                   </label> 
+                                 {%- endif -%}
+                               {%- elsif block.settings.picker_type == 'dropdown' -%}
+                                 <option
+                                   value="{{ value | escape }}"
+                                   {% if option.selected_value == value %}
+                                     selected="selected"
+                                   {% endif %}
+                                 >
+                                   {% if option_disabled -%}
+                                     {{- 'products.product.value_unavailable' | t: option_value: value -}}
+                                   {%- else -%}
+                                     {{- value -}}
+                                   {%- endif %}
+                                 </option>
+                               {%- endif -%}
+                             {%- endfor -%}
+                           </fieldset>
+                         {%- endfor -%}
+                         <script type="application/json">
+                           {{ product.variants | json }}
+                         </script>
+                       </variant-radios>
+ 
+ 
+                     
+                   </td>
+                   <td style="height: 40px; ">
+                     {% comment %} <a href="#" onclick="openDetails(event,this)" style="color:#0c92b7; text-decoration: underline; cursor: default;">{{ prop }}</a> {% endcomment %}
+                     <label href="#" style="color:#0c92b7; text-decoration: none; cursor: default;">{{ prop }}</label>
+                   </td >
+                   <td style="height: 60px; text-align: center;">
+                     <div class="contenedor-imag-pdf">
+                       <a href="#" onclick="window.location.href='/pages/pdf-product?variant={{ variant.id }}';">  
+                       <img src="{{ 'pdf-icon.png' | asset_url }}"> 
+                       <!--<span style="color: #0c92b7;text-decoration: underline;font-size: 14px;"></span> -- se elimino el texto "Espesificasiones"-->
+                       </a>  
+                     </div>
+                     
+                   </td>
+                   <td style="height: 60px; text-align: center;">
+ 
+                     <div class="contenedor-imagenes">
+ 
+                      <div class="contenedor-imag-stp">
+ 
+                       <!-- Metodo par aobtener la URL para acceder y descargar el archivo .STP-->
+                       {% assign strgId = product.selected_or_first_available_variant.id %} 
+                          
+                             {% for product in collections.all.products %}
+                                   {% for variant in product.variants %}
+                                       {% if variant.id== idProductsVariants %}
+                                           {%  assign urlSTP =  variant.metafields.custom.url_3d_solid | default: ''  %}
+                                       {% endif %}
+                                 {% endfor %}
+                             {% endfor %}
+                       <!--Fin del Metodo -->
+ 
+                          {% comment %} <p>{{strgId}}</p>
+                          <p>{{idProductsVariants}}</p> {% endcomment %}
+                        
+                           <a href={{urlSTP}}>
+                           
+                           <img src="{{ 'stp-icon.png' | asset_url }}"> <!--Cambiar Imagen por una que represente un archivo stp-->
+ 
+                         </a> 
+                        
+                       </div>                    
+                     </div>
+ 
+                     
+                 {% else %}
+                   <td style="height: 40px; text-align: center;">{{ prop }}</td>
+                 {% endif %}
+               {% endfor %}
+               <td style="height: 40px; white-space: nowrap; text-align: center;">
+                 {%- liquid
+                   assign price = variant.price | money
+                   assign currency = shop.currency
+                   echo price | append: " " | append: currency | strip_html
+                 -%}
+               </td>
+               <td  style="height: 40px; padding: 0; width: 150px;">
+                 {% comment %} <input
+                   type="number"
+                   data-product-id="{{variant.id}}"
+                   id="quantity-{{variant.id}}"
+                   class="quantity"
+                   value="0"
+                   min="0"
+                 > {% endcomment %}
+ 
+                  <!-- Se modifico el input id="quantity" solo de lectura "El usuario podia eliminar la cantidad y los bones de incremento y decremento dejaban de funcionar correctamente"-->
+                 
+                  <div class="custom-input">
+                   <button type="button"  class="btn-decrement">-</button>
+                   <input type="number"  data-product-id="{{variant.id}}" class="quantity" id="quantity-{{variant.id}}" value="0"  min="0">
+                   <button type="button" class="btn-increment">+</button>
+                 </div>
+               </td>
+             </tr>
+             <!--
+               <tr class="fold">
+                 <td colspan="7">
+ 
+ 
+ 
+                   <div class="fold-content">
+                     <h3>Company Name</h3>
+                     <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+                     <table>
+                     <thead>
+                       <tr>
+                       <th>Company name</th>
+                       <th>Customer no</th>
+                       <th>Customer name</th>
+                       <th>Insurance no</th>
+                       <th>Strategy</th>
+                       <th>Start</th>
+                       <th>Current</th>
+                       <th>Diff</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr>
+                       <td>Sony</td>
+                       <td>13245</td>
+                       <td>John Doe</td>
+                       <td>064578</td>
+                       <td>A, 100%</td>
+                       <td class="cur">20000</td>
+                       <td class="cur">33000</td>
+                       <td class="cur">13000</td>
+                       </tr>
+                       <tr>
+                       <td>Sony</td>
+                       <td>13288</td>
+                       <td>Claire Bennet</td>
+                       <td>064877</td>
+                       <td>B, 100%</td>
+                       <td class="cur">28000</td>
+                       <td class="cur">48000</td>
+                       <td class="cur">20000</td>
+                       </tr>
+                       <tr>
+                       <td>Sony</td>
+                       <td>12341</td>
+                       <td>Barry White</td>
+                       <td>064123</td>
+                       <td>A, 100%</td>
+                       <td class="cur">10000</td>
+                       <td class="cur">22000</td>
+                       <td class="cur">12000</td>
+                       </tr>
+                     </tbody>
+                     </table>
+                   </div>
+ 
+ 
+                 </td>
+               </tr>
+             -->
+           {% endfor %}
+ 
+           {% comment %}
+             {% for variant2 in product.variants %}
+             <tr style="height: 40px;">
+               <td style="height: 40px; width: 15%;">{{ variant2 | json }}</td>
+             </tr>
+                     {% endfor %}
+           {% endcomment %}
+         </tbody>
+       </table>
+
+    </div>
+      <button type="button" name="add" id="AddMultiCart">Agregar al carrito</button>
+      
+      
+      
+ 
+  {%- else -%}
+    <variant-selects
+      id="variant-selects-{{ section.id }}"
+      class="no-js-hidden"
+      data-section="{{ section.id }}"
+      data-url="{{ product.url }}"
+      {% if update_url == false %}
+        data-update-url="false"
+      {% endif %}
+      {{ block.shopify_attributes }}
+    >
+      {%- for option in product.options_with_values -%}
+        <div class="product-form__input product-form__input--dropdown">
+          <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+            {{ option.name }}
+          </label>
+          <div class="select">
+            <select
+              id="Option-{{ section.id }}-{{ forloop.index0 }}"
+              class="select__select"
+              name="options[{{ option.name | escape }}]"
+              form="{{ product_form_id }}"
+            >
+              {% render 'product-variant-options', product: product, option: option, block: block %}
+            </select>
+            {% render 'icon-caret' %}
+          </div>
+        </div>
+      {%- endfor -%}
+
+      <script type="application/json">
+        {{ product.variants | json }}
+      </script>
+    </variant-selects>
+  {%- endif -%}
+  
+
+
+{%- endunless -%}
+
+
+
+<noscript class="product-form__noscript-wrapper-{{ section.id }}">
+  <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
+    <label class="form__label" for="Variants-{{ section.id }}">
+      {{- 'products.product.product_variants' | t -}}
+    </label>
+    <div class="select">
+      <select
+        name="id"
+        id="Variants-{{ section.id }}"
+        class="select__select"
+        form="{{ product_form_id }}"
+      >
+        {%- for variant in product.variants -%}
+          <option
+            {% if variant == product.selected_or_first_available_variant %}
+              selected="selected"
+            {% endif %}
+            {% if variant.available == false %}
+              disabled
+            {% endif %}
+            value="{{ variant.id }}"
+          >
+            {%- liquid
+              echo variant.title
+              echo variant.price | money | strip_html | prepend: ' - '
+              if variant.available == false
+                echo 'products.product.sold_out' | t | prepend: ' - '
+              endif
+              if variant.quantity_rule.increment > 1
+                echo 'products.product.quantity.multiples_of' | t: quantity: variant.quantity_rule.increment | prepend: ' - '
+              endif
+              if variant.quantity_rule.min > 1
+                echo 'products.product.quantity.minimum_of' | t: quantity: variant.quantity_rule.min | prepend: ' - '
+              endif
+              if variant.quantity_rule.max != null
+                echo 'products.product.quantity.maximum_of' | t: quantity: variant.quantity_rule.max | prepend: ' - '
+              endif
+              # TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter
+              # theme-check-disable
+              assign cart_quantity = cart | item_count_for_variant: variant.id
+              # theme-check-enable
+              if cart_quantity > 0
+                echo 'products.product.quantity.in_cart_html' | t: quantity: cart_quantity | prepend: ' - '
+              endif
+            -%}
+          </option>
+        {%- endfor -%}
+      </select>
+      {% render 'icon-caret' %}
+    </div>
+  </div>
+</noscript>
