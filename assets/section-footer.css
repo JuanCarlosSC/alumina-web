@@ -44,7 +44,13 @@
 
 .footer__content-bottom {
   border-top: solid 0.1rem rgba(var(--color-foreground), 0.08);
-  padding-top: 3rem;
+  padding-top: 0rem;
+}
+.footer__content-bottom small{
+  display: flex;
+  border-top: solid 0.1rem rgba(var(--color-foreground), 0.08);
+  padding-top: 1rem;
+  justify-content: center;
 }
 
 .footer__content-bottom:only-child {
@@ -149,6 +155,7 @@
   margin-bottom: 1rem;
   margin-top: 0;
   font-size: calc(var(--font-heading-scale) * 1.6rem);
+  text-align: center;
 }
 
 @media screen and (min-width: 990px) {

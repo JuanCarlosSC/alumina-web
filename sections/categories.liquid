@@ -152,6 +152,9 @@
     .box{
 
     }
+    .hr-title{
+      display:none;
+    }
 
     .box h3 {
       border-bottom-left-radius:8px 8px;
@@ -162,7 +165,11 @@
 
     }
 
- 
+    @media screen and(max-width: 600){
+      .hr-title{
+        display:block;
+      }
+    }
 
 
 
@@ -208,7 +215,7 @@
     <div class="titulo" style="margin:0; padding:0;">
 
     </div>
-    <hr style="margin:0;">
+    <hr class="hr-title" style="margin:0;">
 
     <div class="wrap-categories">
       <div class="wrap-filters" id="hideit">

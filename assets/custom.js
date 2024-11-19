@@ -1,35 +1,46 @@
-window.addEventListener('DOMContentLoaded', (event) => {
-    verificarTamaño(); // Verifica el tamaño inicial una vez que el DOM esté completamente cargado
-  });
-  
-  window.addEventListener('resize', verificarTamaño); // Verifica el tamaño al redimensionar la ventana
-  
+$(document).ready(function() {
   function verificarTamaño() {
-    var hiddenDiv = document.getElementById('fixed-div');
-    var maincontainer = document.getElementById('MainContent');
-    var textserach=document.getElementById('Search-In-Modal');
-    var label=document.getElementById('text1');
-    
-    var widthPlaceholder=textserach.offsetWidth;
-    
-    var width = maincontainer.offsetWidth; 
-    var height = maincontainer.offsetHeight;
-  
-    console.log("Ancho de la ventana: " + width + "px, Alto de la ventana: " + height + "px");
-  
-    if (height < 400) {
-      hiddenDiv.style.display = 'block';
+      var $hiddenDiv = $('#fixed-div');
+      var $maincontainer = $('#MainContent');
+      var $textsearch = $('#Search-In-Modal');
+      var $label = $('#text1');
+      var $logo = $('#img-logo'); 
       
-    } else {
-      hiddenDiv.style.display = 'none';
-    }
-    if(widthPlaceholder<140){
-       label.style.fontSize="1rem";
-    }
-    else{
-      label.style.fontSize="1.3rem";
-    }
-    
-    
-}
+      
+      if ($hiddenDiv.length && $maincontainer.length && $textsearch.length && $label.length && $logo.length) {
+          var widthPlaceholder = $textsearch.width();
+          var width = $maincontainer.width(); 
+          var height = $maincontainer.height();
+        
+          console.log("Ancho de la ventana: " + width + "px, Alto de la ventana: " + height + "px");
+        
+          if (height < 400) {
+              $hiddenDiv.show();
+          } else {
+              $hiddenDiv.hide();
+          }
+          
+          if (widthPlaceholder < 140) {
+              $label.css('font-size', '1rem');
+          } else {
+              $label.css('font-size', '1.3rem');
+          }
+        
+          if (width < 478) {
+              $logo.attr('src', 'assets/A-icon.png');
+              $logo.attr('alt', 'logo nuevo');
+          } else {
+              $logo.attr('src', 'logo-original.jpg');
+              $logo.attr('alt', 'Logo Original');
+          }
+      } else {
+          console.warn('Uno o más elementos no fueron encontrados en el DOM.');
+      }
+  }
 
+  
+  verificarTamaño();
+
+ 
+  $(window).resize(verificarTamaño);
+});

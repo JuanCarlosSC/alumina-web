@@ -11,6 +11,7 @@
   "current": {
     "logo": "shopify://shop_images/alumina_logo_black_blue_83aa172c-6c60-4a20-9d06-dc1b0ca264ef.png",
     "logo_width": 150,
+    "favicon": "shopify://shop_images/A-icon.png",
     "type_header_font": "helvetica_n7",
     "heading_scale": 100,
     "type_body_font": "helvetica_n4",
