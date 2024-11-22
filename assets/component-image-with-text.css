@@ -315,6 +315,8 @@
 
 .image-with-text:not(.collapse-corners, .image-with-text--overlap) .image-with-text__media-item {
   z-index: 2;
+  padding-left: 1.8rem;
+  padding-right: 1.8rem;
 }
 
 /* Needed for gradient continuity with or without animation so that transparent PNG images come up as we would expect */

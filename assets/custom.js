@@ -14,7 +14,7 @@ $(document).ready(function() {
         
           console.log("Ancho de la ventana: " + width + "px, Alto de la ventana: " + height + "px");
         
-          if (height < 400) {
+          if (height < 490) {
               $hiddenDiv.show();
           } else {
               $hiddenDiv.hide();
