@@ -256,7 +256,7 @@
   font-weight: bold;
 }
 #tblProducts tr:hover {
-  background-color: #f3f3f3; /*Se cambio el color del borde de #dddd a #f3f3f3*/
+  background-color: #cfcdcd; /*Se cambio el color del borde de #dddd a #f3f3f3*/
 }
 #tblProducts > tbody > tr > th {
   border: 1px solid #070707;       /*Se cambio el color del borde de #dddd a #070707*/

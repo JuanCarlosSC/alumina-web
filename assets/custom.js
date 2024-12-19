@@ -14,11 +14,7 @@ $(document).ready(function() {
         
           console.log("Ancho de la ventana: " + width + "px, Alto de la ventana: " + height + "px");
         
-          if (height < 490) {
-              $hiddenDiv.show();
-          } else {
-              $hiddenDiv.hide();
-          }
+       
           
           if (widthPlaceholder < 140) {
               $label.css('font-size', '1rem');

@@ -3621,7 +3621,7 @@ details-disclosure > details {
 
   .newsletter{
     position:relative;
-    top:35px;
+    top:65px;
     background-color: white;
     border-radius: 10px;
     padding:10px;
@@ -3723,4 +3723,8 @@ details-disclosure > details {
         display: block; 
     }
   }
+.li-alu img{
+  display: flex;
+  width: fit-content;
 
+}

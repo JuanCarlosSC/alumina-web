@@ -11,7 +11,7 @@
 {% endcomment %}
 <style>
    #AddMultiCart{
-     width: 100%;
+     width: 80%;
      background: white;
      display: flex;
      justify-content: center;
@@ -22,11 +22,16 @@
      font-size: 1.5rem;
      letter-spacing: .1rem;
      line-height: 43px;
-     margin-top: 30px;
-	 max-width: 250px;
-	 margin-left: auto;
-	 margin-right: auto;
-   }
+     margin-top: 10px;
+      max-width: 250px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .inventary{
+      font-size: 10px;;
+      text-align: center;
+      margin: 0;
+    }
    button#AddMultiCart:active {
      background: #dfdfdf;
    }
@@ -116,15 +121,18 @@
     align-items: center;
 	  background:#fdfafa; /*Se cambio de Blanco a #dddd*/
     justify-content:space-between;
-    margin: 5px;
-    cursor: de;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 1px solid #050000
+    
+  
 }
 
 input[type="number"] {
     {% comment %} width: 60px; {% endcomment %}
     text-align: center;
     background-color:#fdfafa;
-    width:1rem;
+    width:4rem;
       /*Cambio de color */
     {% comment %} border: 1px solid #ccc; {% endcomment %}
     {% comment %} border-radius: 0; {% endcomment %}
@@ -182,19 +190,38 @@ input[type="number"] {
     background-color: #ddd;
 } {% endcomment %}
 
+.table-container table tr:hover { background-color: #6d6a6a;} /* Cambia al color que desees */
+.medidas{
+
+  background-color: #0C92B7;
+  border: 1px solid #050000;
+  width: fit-content;
+
+  justify-content: end;
+  align-items: end; 
+  margin-bottom: 1px;;
+  padding: 0;
+}
+
+.medidas p{
+  color:white;
+}
 </style>
 
 
 
 {{ 'product.js' | asset_url | script_tag }}
+{{ 'related-produts.js' | asset_url | script_tag }}
+
 {%- unless product.has_only_default_variant -%}
 
   {%- if block.settings.picker_type == 'button' -%}
     
       {% comment %} <div>{{product|json }}</div> {% endcomment %}
-
+      
     <div class="table-container">
-
+      <div class="medidas"><p>Medidas: milimetros </p> </div>
+  
        <table width="100%" id="tblProducts" class="fold-table">
  
          <tbody id="ts">
@@ -405,10 +432,11 @@ input[type="number"] {
                   <!-- Se modifico el input id="quantity" solo de lectura "El usuario podia eliminar la cantidad y los bones de incremento y decremento dejaban de funcionar correctamente"-->
                  
                   <div class="custom-input">
-                   <button type="button"  class="btn-decrement">-</button>
+                   <button type="button"  class="btn-decrement" onclick="btnDecrement(this)">-</button>
                    <input type="number"  data-product-id="{{variant.id}}" class="quantity" id="quantity-{{variant.id}}" value="0"  min="0">
-                   <button type="button" class="btn-increment">+</button>
+                   <button type="button" class="btn-increment" onclick="btnIncrement(this)">+</button>
                  </div>
+                 <h4 class="inventary">Disponibles: {{variant.inventory_quantity}}</h4>
                </td>
              </tr>
              <!--
@@ -485,10 +513,16 @@ input[type="number"] {
        </table>
 
     </div>
-      <button type="button" name="add" id="AddMultiCart">Agregar al carrito</button>
+      <button type="button" name="add" id="AddMultiCart" onclick="clikButton()">Agregar al carrito</button>
       
-      
-      
+      <div id="warning-message2" class="warning-message " style="display: none; ">
+        Cantidad incorrecta, selecione un producto.
+      </div>   
+      <div id="error-message2" class="error-message" style="display: none; ">
+        La cantidad ingresada es mayor a la disponible en stock.
+      </div>
+
+
  
   {%- else -%}
     <variant-selects

@@ -18,8 +18,8 @@
 
 	document.addEventListener("DOMContentLoaded", function () {
 		//Campos de la tabla del Producto
-		const variantId = parseInt(getUrlParameter('variant')); //capturar ID de la Variante;
-        let medidades=[];   let imgDiagramproduct; 
+        let medidades=[];   
+		let imgDiagramproduct; 
 		let imgError404="https://cdn.shopify.com/s/files/1/0812/4353/7710/files/diagram_404.png?v=1727926694";
 		
 

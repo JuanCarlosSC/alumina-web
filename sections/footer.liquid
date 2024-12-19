@@ -31,7 +31,54 @@
       padding-bottom: {{ paddingInferior }}px;
     }
   }
+  .box-foot{
+    margin-left:10%;
+    margin-right:10%;
+    margin-top:0;
+    margin-bottom:0;
+
+  }
 {%- endstyle -%}
+<div style="height: 150px;"> <div class="box-foot ">
+       
+  <div class="newsletter center  {% if settings.animations_reveal_on_scroll %} scroll-trigger{% endif %}" >
+   
+         
+            <div class="grid grid--4-col-desktop  {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+                  <div class="grid--1-col grid__item">
+                    <img class="imgs" src="{{ 'tracktransport.png' | asset_url }}" alt="Envios Seguro">
+                      <p class="contain-title">Envio Seguros</p>
+                      <p class="contain-content">Envios a todo</p>
+                      <p class="contain-content">México</p>
+                  </div>
+                  <div class="grid--2-col grid__item">
+                      <img class="imgs" src="{{ 'return_box.png' | asset_url }}" alt="Envios Seguro">
+                      <p class="contain-title">Facil devolucion</p>
+                      <p class="contain-content">Politica de devolucion</p>
+                      <p class="contain-content">de 5 dias habiles</p>
+                  </div>
+                  <div class="grid--3-col-tablet grid__item" id="img-paypal">
+                    <img class="imgs" src="{{ 'card.png' | asset_url }}" alt="Envios Seguro">
+                    <p class="contain-title">Pago Seguro</p>
+                    <p class="contain-content">Contamos con metodos de</p>
+                    <p class="contain-content">pago confiable</p>
+                  </div>
+                  <div class="grid--4-col-tablet grid__item">
+                    <img class="imgs" src="{{ 'Service.png' | asset_url }}" alt="Envios Seguro">
+                    <p class="contain-title">Soporte</p>
+                    <p class="contain-content">L-V 8:00 a.m - 8:00 p.m</p>
+                    <p class="contain-content">Sab. 8:00 a.m - 5:00 p.m</p>
+                  
+  
+           </div>
+
+    </div>
+  </div>
+
+</div>  
+
+  </div> 
+  
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   {%- liquid
