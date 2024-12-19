@@ -190,22 +190,8 @@ input[type="number"] {
     background-color: #ddd;
 } {% endcomment %}
 
-.table-container table tr:hover { background-color: #6d6a6a;} /* Cambia al color que desees */
-.medidas{
 
-  background-color: #0C92B7;
-  border: 1px solid #050000;
-  width: fit-content;
 
-  justify-content: end;
-  align-items: end; 
-  margin-bottom: 1px;;
-  padding: 0;
-}
-
-.medidas p{
-  color:white;
-}
 </style>
 
 
@@ -220,9 +206,13 @@ input[type="number"] {
       {% comment %} <div>{{product|json }}</div> {% endcomment %}
       
     <div class="table-container">
-      <div class="medidas"><p>Medidas: milimetros </p> </div>
-  
-       <table width="100%" id="tblProducts" class="fold-table">
+      <div class="medidas">
+        <input type="checkbox" id="milimetro" name="milimetros" onchange="checkboxActive(this)" value="milimetro1" checked >
+        <label for="milimetro"> Milimetros (mm)</label><br>
+        <input type="checkbox" id="pulgadas" name="pulgadas" onchange="checkboxActive(this)" value="pulgadas1">
+        <label for="vehicle2"> Pulgadas (in)</label><br>
+      </div>
+    <table width="100%" id="tblProducts" class="fold-table">
  
          <tbody id="ts">
            {% comment %} {{ product.variants[0].title  | split: '|' }} {% endcomment %}
@@ -409,7 +399,7 @@ input[type="number"] {
  
                      
                  {% else %}
-                   <td style="height: 40px; text-align: center;">{{ prop }}</td>
+                   <td  style="height: 40px; text-align: center;"><label class="datas">{{ prop }}</label></td>
                  {% endif %}
                {% endfor %}
                <td style="height: 40px; white-space: nowrap; text-align: center;">

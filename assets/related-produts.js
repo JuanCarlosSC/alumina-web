@@ -184,15 +184,17 @@ async function cellRelatedProducts(indice){
           <div class="container-products scroll-trigger animate--slide-in">
            <div class="element-card">
             <a href="${item[2]}"><img class="img-related-produts" src="${item[3]}" alt="${item[0]}"></a>
-            <h4>${item[1]}</h4>
+            <h3>${item[1]}</h3>
             <h4>${item[0]}</h4>
             <h4 style="font-size:11px; text-align: center;"> disponibles ${item[5]}</h4>
-            <div class="custom-input">
+            <div class="custom-input-card">
                    <button type="button"  class="btn-decrement" onclick="btnDecrement(this)">-</button>
                     <input type="number"  data-product-id="${idVariant}" class="quantity" id="quantity-${idVariant}" value="0"  min="0">
                    <button type="button" class="btn-increment"  onclick="btnIncrement(this)" >+</button>
             </div>
-           <button class="btn-card" data-product-id="${idVariant}" type="button" name="add" id="AddMultiCart" onclick="addCard(this)">Agregar al carrito</button>
+           <button class="btn-card" data-product-id="${idVariant}" type="button" name="add" id="AddMultiCart2" onclick="addCard(this)">Agregar
+           <img src="https://cdn.shopify.com/s/files/1/0812/4353/7710/files/shopping.png?v=1734627656" alt="Icono de Comparar">
+            </button>
            <div>
           </div>  
         `;

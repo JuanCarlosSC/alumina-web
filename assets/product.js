@@ -1,5 +1,6 @@
+
 document.addEventListener('DOMContentLoaded', function () {
-	
+  
 	const variantRows = document.querySelectorAll('.variant-row');
 	variantRows.forEach(row => {
 		row.addEventListener('click', function () {
@@ -17,6 +18,86 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+function checkboxActive(checkbox){
+	var milimetrosCheckbox = document.getElementById('milimetro');
+	var pulgadasCheckbox = document.getElementById('pulgadas');
+	var table = document.getElementById('ts');
+    debugger;
+	if(milimetrosCheckbox.checked==false && pulgadasCheckbox.checked==false){
+		checkbox.checked = true
+	}else{
+		
+		if(checkbox.checked){
+			if (checkbox.name=="milimetros") {
+				pulgadasCheckbox.checked = false;
+				changeValueTableMM(table);
+				console.log('Milimetros seleccionado');	
+			}
+			else if(checkbox.name=="pulgadas"){
+				milimetrosCheckbox.checked = false;
+				changeValueTableIn(table);
+				console.log('pulgadas seleccionado');
+			}
+		}
+	}
+
+	
+}
+
+function changeValueTableMM(table) {
+// Iterar sobre las filas de la tabla, comenzando desde la segunda fila
+  var numElements=number(table);
+	for (var i = 1; i < table.rows.length; i++) {
+		var row = table.rows[i]; 
+		for (var c = 4; c < numElements; c++) { // Iterar sobre las celdas a partir de la cuarta
+			var cell = table.rows[i].cells[c];
+		if (cell) { 
+			var value = cell.outerText;
+				var valueIn = Math.round(value*25.4);
+				if(valueIn > 0){
+					cell.innerText=valueIn;
+				}
+		} 
+		}
+	}
+}
+
+function changeValueTableIn(table) {
+	// Iterar sobre las filas de la tabla, comenzando desde la segunda fila
+	  var numElements=number(table);
+		for (var i = 1; i < table.rows.length; i++) {
+			var row = table.rows[i]; 
+			for (var c = 4; c < numElements; c++) { // Iterar sobre las celdas a partir de la cuarta
+				var cell = table.rows[i].cells[c];
+			if (cell) { 
+				var value = cell.outerText;
+				var valueIn = Number((value/25.4).toFixed(3));
+				if(valueIn > 0){
+					cell.innerText=valueIn;
+				}
+			} 
+			}
+		}
+	}
+  
+function number(table){
+	let datos=4;
+	for (var c = 4; c < table.rows[0].cells.length; c++) { 
+		var cell = table.rows[0].cells[c]; // Obtener la celda actual
+		if (cell) { // Verificar si el elemento cell no es null
+			if(cell.outerText=="kg"){
+				break;
+			}
+			else{
+				datos++;
+			}
+			
+		}
+	}
+	return datos;
+}
+
+
 function btnIncrement(button) {
 	if (button.classList.contains('btn-increment')) {
 	  const input = button.previousElementSibling; 
@@ -32,7 +113,6 @@ function btnDecrement(button) {
 	  }
 	}
 }
-  
 
 function selectVariantById(variantId) {
 	// Simula el comportamiento de seleccionar una variante, por ejemplo, disparando un evento de cambio
