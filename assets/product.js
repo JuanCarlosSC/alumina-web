@@ -1,47 +1,38 @@
 
+
 document.addEventListener('DOMContentLoaded', function () {
   
 	const variantRows = document.querySelectorAll('.variant-row');
 	variantRows.forEach(row => {
 		row.addEventListener('click', function () {
 			if (this.classList.contains('disabled')) return; // Ignora los clics en filas deshabilitadas
-
 			// Obtén el ID de la variante seleccionada
 			const variantId = this.getAttribute('data-variant-id');
-
 			// Llama a la función que cambia la variante, puede que ya la tengas implementada
-			debugger;
 			selectVariantById(variantId);
 		});
 	});
     ajustarScroll();
-
 });
 
 function checkboxActive(checkbox){
 	var milimetrosCheckbox = document.getElementById('milimetro');
 	var pulgadasCheckbox = document.getElementById('pulgadas');
 	var table = document.getElementById('ts');
-    debugger;
 	if(milimetrosCheckbox.checked==false && pulgadasCheckbox.checked==false){
 		checkbox.checked = true
 	}else{
-		
 		if(checkbox.checked){
 			if (checkbox.name=="milimetros") {
 				pulgadasCheckbox.checked = false;
 				changeValueTableMM(table);
-				console.log('Milimetros seleccionado');	
 			}
 			else if(checkbox.name=="pulgadas"){
 				milimetrosCheckbox.checked = false;
 				changeValueTableIn(table);
-				console.log('pulgadas seleccionado');
 			}
 		}
-	}
-
-	
+	}	
 }
 
 function changeValueTableMM(table) {
@@ -51,13 +42,24 @@ function changeValueTableMM(table) {
 		var row = table.rows[i]; 
 		for (var c = 4; c < numElements; c++) { // Iterar sobre las celdas a partir de la cuarta
 			var cell = table.rows[i].cells[c];
+			var valueIn; var valueInRounded;
 		if (cell) { 
 			var value = cell.outerText;
-				var valueIn = Math.round(value*25.4);
-				if(valueIn > 0){
-					cell.innerText=valueIn;
-				}
-		} 
+			   if(value[0]=="ø"){
+				value = value.substring(1); // Remover el primer carácter
+				valueIn = value*25.4;
+				valueInRounded = parseFloat(valueIn.toFixed(1));
+				valueInRounded = "ø" + valueInRounded;
+			   }
+			   else if(value[0]=="M"){
+				valueInRounded=value;
+			   }
+			   else{
+				   valueIn = value*25.4;
+				   valueInRounded = parseFloat(valueIn.toFixed(1));
+			   }
+			   cell.innerText=valueInRounded;	
+		   } 
 		}
 	}
 }
@@ -67,18 +69,28 @@ function changeValueTableIn(table) {
 	  var numElements=number(table);
 		for (var i = 1; i < table.rows.length; i++) {
 			var row = table.rows[i]; 
+			var valueIn; var valueInRounded; 
 			for (var c = 4; c < numElements; c++) { // Iterar sobre las celdas a partir de la cuarta
 				var cell = table.rows[i].cells[c];
-			if (cell) { 
+			if (cell) { 	
 				var value = cell.outerText;
-				var valueIn = Number((value/25.4).toFixed(3));
-				if(valueIn > 0){
-					cell.innerText=valueIn;
+				debugger;
+				if(value[0]=="ø"){
+				 value = value.substring(1); // Remover el primer carácter
+				 valueIn = Number((value/25.4).toFixed(3));
+				 valueIn = "ø" + valueIn;
 				}
-			} 
+				else if(value[0]=="M"){
+					valueIn=value;
+				}
+				else{
+					valueIn = Number((value/25.4).toFixed(3));
+				}
+				cell.innerText=valueIn;
+			 } 
 			}
 		}
-	}
+}
   
 function number(table){
 	let datos=4;
@@ -91,12 +103,10 @@ function number(table){
 			else{
 				datos++;
 			}
-			
 		}
 	}
 	return datos;
 }
-
 
 function btnIncrement(button) {
 	if (button.classList.contains('btn-increment')) {
@@ -201,13 +211,14 @@ async function productStockValidity(table){
 			productID = num2.getAttribute('data-product-id');
 			input = document.getElementById(`quantity-${productID}`);
 
-			let stock = await verifyExistence(productID, input.value);
+			let [stock,quantity] = await verifyExistence(productID, input.value);
 			
 			if(stock){
 				flag=true;
 			}
 			else{
 				flag=false;
+				input.value=quantity;
 				break;
 			}	
 		}	
@@ -339,7 +350,7 @@ async function clikButton(){
 function openDetails(event, obj) {
 	event.preventDefault();
 	var elementTr = obj.parentElement.parentElement;
-	console.log("test");
+	//console.log("test");
 	// $(".fold-table tr.view").on("click", function(){
 	// $(this).toggleClass("open").next(".fold").toggleClass("open");
 	// });

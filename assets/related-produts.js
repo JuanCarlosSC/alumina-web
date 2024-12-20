@@ -1,7 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", async function () {
-
- 
+  
   var comboBox = document.getElementById('productVariantsCombo');
   
  // Verificar que el comboBox existe
@@ -9,10 +8,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   if (comboBox) { 
     handleSelection(comboBox);
   } else{console.log("No existe el elemento HTML Select")};
-  }, 500);
+  }, 600);
 
 });
-
 
 async function verifyExistence(productID,quantity){
  
@@ -21,7 +19,7 @@ async function verifyExistence(productID,quantity){
  if(quantity <= data.quantityAvailable ){
   verify=true;
  } 
- return verify; 
+ return [verify,data.quantityAvailable]; 
  
 }
 
@@ -32,7 +30,7 @@ async function addCard(button) {
   var input = document.getElementById(`quantity-${productID}`);
   let quantityNum = input.value;
 
-  let stock = await verifyExistence(productID, quantityNum);
+  let [stock,quantity] = await verifyExistence(productID, quantityNum);
 
   if (quantityNum == "0" || quantityNum == "") {
     input.classList.add('vibration', 'warning-border');
@@ -90,10 +88,10 @@ async function addCard(button) {
         errorMessage.style.display = 'none';
         input.classList.remove('error-border');
       }, 3000);
+      input.value=quantity;
     }
   }
 }
-
 
 //Funcion modal para mostrar mensaje de modal
 function showModal() {
@@ -137,8 +135,7 @@ function reloadHeader() {
 
   xhr.send();
 }
-
-  
+ 
 // Función para manejar la selección del comboBox
 function handleSelection() {
   var comboBox = document.getElementById('productVariantsCombo');
@@ -162,7 +159,7 @@ async function cellRelatedProducts(indice){
       const numberOfListItems = listItems.length;
       if(numberOfListItems>0){
         listItems.forEach(li => li.remove());
-        console.log('Se han eliminado todos los elementos <li>.');
+       
       }
 
       if (!container) {
@@ -279,6 +276,7 @@ async function getProductVariantData(variantId) {
     const data = await response.json();
     return data.data.node;
 }
+
 // Función para obtener los datos de los el stock del producto
 function getQuantityProductGraphql(variantId) {
   const query = `
@@ -306,7 +304,7 @@ function getQuantityProductGraphql(variantId) {
     return  response.json(); // Convertir la respuesta a JSON
   })
   .then(data => {
-    console.log('Datos de respuesta:', data);
+  
 
     if (data.data && data.data.node) {
       return data.data.node; // Devolver los datos necesarios si existen
