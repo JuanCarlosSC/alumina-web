@@ -74,7 +74,7 @@ function changeValueTableIn(table) {
 				var cell = table.rows[i].cells[c];
 			if (cell) { 	
 				var value = cell.outerText;
-				debugger;
+
 				if(value[0]=="ø"){
 				 value = value.substring(1); // Remover el primer carácter
 				 valueIn = Number((value/25.4).toFixed(3));
@@ -111,16 +111,16 @@ function number(table){
 function btnIncrement(button) {
 	if (button.classList.contains('btn-increment')) {
 	  const input = button.previousElementSibling; 
-	  input.value = parseInt(input.value) + 1;
+	  
+		parseInt(input.value)>= 0 ? input.value = parseInt(input.value) + 1 : input.value = 0;
 	}
 }
   
 function btnDecrement(button) {
 	if (button.classList.contains('btn-decrement')) {
 	  const input = button.nextElementSibling;
-	  if (parseInt(input.value) > 0) {
-		input.value = parseInt(input.value) - 1;
-	  }
+
+	  parseInt(input.value)> 0 ? input.value = parseInt(input.value) - 1 : input.value = 0;
 	}
 }
 
@@ -150,8 +150,8 @@ async function addMultiCart() {
 		throw new Error('Error en la solicitud: ' + response.statusText);
 	}
 	reloadHeader();
-	//showModal();
-	window.location.href = '/cart';	
+	showModal();
+	//window.location.href = '/cart';	
 	return response.json();
 	})
 	.catch((error) => {
@@ -188,7 +188,6 @@ function checkTableData(table){
 			}
 		}	
 	}
-
 	if(cont==table.rows.length-1 || cont2>0){
 
 		flag=false;
@@ -258,9 +257,9 @@ function checkTable(table){
 			}
 		}	
 	}
-
+	
 	if(cont==table.rows.length-1){
-
+    
     var warningMessage = document.getElementById('warning-message2');
     warningMessage.style.display = 'block';
     setTimeout(() => {
@@ -345,7 +344,6 @@ async function clikButton(){
 	
     }
 }
-
 
 function openDetails(event, obj) {
 	event.preventDefault();

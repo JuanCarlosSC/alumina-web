@@ -114,7 +114,6 @@ function showModal() {
 
 //funcion para actualizar icono del carrito
 function reloadHeader() {
-  debugger;
   var xhr = new XMLHttpRequest();
   xhr.open('GET',window.location.href, true); // Asegúrate de que esta ruta devuelve el contenido necesario
 
