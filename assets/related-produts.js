@@ -308,25 +308,36 @@ function getQuantityProductGraphql(variantId) {
 
 // Funcion para ir a la ventana del productos selecionados ( Carrito )
 function onclickViewCard() {
-  var modal = document.getElementById("itemModal");
   window.location.href = '/cart';
 }
 
-// Fucnion para salir del modal
-function onclickCloseModal() {
-	let classe = document.querySelector('.item');
+// Función para mostrar el modal con animación
+function showModal() {
   let modal = document.getElementById("itemModal");
+  let backgroundModal = document.getElementById("background-modal"); 
 
-	if (classe != null){
-    modalItems.innerHTML = "";
-		classe.remove();
-    console.log("existe");
-	}
-	else {
-		console.log("No existe");
-	}
+  backgroundModal.style.display = "block";
 
-	modal.style.display = "none";
+    setTimeout(() => {
+      modal.classList.remove("hide"); 
+      modal.classList.add("show"); 
+    }, 500); 
+}
+
+// Función para cerrar el modal con animación
+function onclickCloseModal() {
+  let modal = document.getElementById("itemModal");
+  let itemsElements = document.getElementById("modalItems");
+  let backgroundModal = document.getElementById("background-modal"); 
+
+  modal.classList.remove("show"); 
+  modal.classList.add("hide"); 
+  
+  setTimeout(() => {
+    itemsElements.innerHTML = "";
+    backgroundModal.style.display = "none";
+  
+  }, 500);
 }
 
 // Funcoin para obtener informacion de los productos GraphQL
@@ -386,13 +397,12 @@ function onclcikMostrarModalCard(infoCompra, id, qty) {
   let name = infoCompra.product.title;
   let noPart = infoCompra.title;
   let index = noPart.indexOf('|');
-  noPart = noPart.substring(0,index);
   let quantity = qty;
   let price = Math.round((infoCompra.price.amount * quantity),2);
   let currencyCode = infoCompra.price.currencyCode;
-
-  let modal = document.getElementById("itemModal");
   let modalItems = document.getElementById("modalItems");
+  
+  noPart = noPart.substring(0,index);
   modalItems.innerHTML = `
     <div class="item">
       <img src="${urlImgProduct}" alt="${idProduct}">
@@ -404,9 +414,9 @@ function onclcikMostrarModalCard(infoCompra, id, qty) {
         <p>Precio: $ ${price} ${currencyCode}</p>
       </div>
     </div>
+    <hr id="hrModal">
   `;
-  modal.style.display = "block";
+  showModal();
 }
-
 
 /*** Fin ***/ 

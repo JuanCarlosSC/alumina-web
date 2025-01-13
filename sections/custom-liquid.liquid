@@ -107,6 +107,10 @@ input[type="number"] {
   margin:0 auto;
 }
 
+#AddMultiCart2:active{
+  background-color: #327534;
+}
+
 
 
 /* Estilos para las imágenes de productos relacionados */
@@ -169,10 +173,11 @@ input[type="number"] {
 
 
 /* El modal (por defecto, está oculto) */
-.modal {
+
+.background-modal {
   display: none;
   position: fixed;
-  z-index: 1000;
+  z-index: 10;
   left: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 0.4); 
@@ -180,41 +185,42 @@ input[type="number"] {
   height: 100%; 
 }
 
-/* Contenido del modal */
-.modal-content {
-  display: grid;
-  justify-self: end;
-  background-color: #fefefe;
-  border: 1px solid #888;
-  align-content: end;
-  width: 400px; 
-  padding: 0 15px 15px 15px;
-  box-sizing: border-box; 
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  margin: 0 20px 0 0; 
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+.modal {
+  position: fixed;
+  top: 0; /* Ajusta según lo necesites */
+  right: -400px; /* Inicialmente fuera de la pantalla */
+  width: 400px;
+  z-index: 5;
+  transition: transform 0.5s ease-in-out; /* Suavizar el movimiento */ 
 }
 
-/* El botón de cerrar (X) */
-.close {
-  color: #aaa;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: default;
+.modal.show {
+  transform: translateX(-100%); /* Mover el modal dentro de la pantalla */
 }
-.close:hover, 
-.close:focus {
-    color: #EB3B3D;
-    text-decoration: none; 
-    cursor: pointer; 
+
+.modal.hide {
+  transform: translateX(100%); /* Mover el modal fuera de la pantalla */
 }
+
+.modal-content {
+  background-color: #fefefe;
+  border: 1px solid #888;
+  border-radius:  0 0 8px 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  box-sizing: border-box;
+  
+}
+
+
+
 
 /* Estilo de los elementos del artículo */
 .item {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  font-size: 14px;
+  justify-content: space-evenly;
 }
 .item-element {
   display: grid; 
@@ -224,22 +230,30 @@ input[type="number"] {
   list-style: none;
 }
 .item img {
-  width: 150px;
+  width: 117px;
   border-radius: 4px;
-  margin-right: 10px;
 }
 .item-element p {
-  line-height: 25px;
+  line-height: 19px;
   margin: 0;   
   padding: 0; 
 }
+
+.modal-content h3{
+  margin: 0;
+  padding: 5px 5px 5px 0px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #0D92B6;
+}
+
 #hrModal {
   margin:0;
 
 }
 
 
-/* Botones de carrito y seguir comprando*/
+/**** Botones del  "carrito y seguir comprando" ****/
 
 .groupBtn{
   display: flex;
@@ -263,7 +277,7 @@ input[type="number"] {
   background-color: #E5E5E5;
 }
 
-.groupBtn #viewCard:hover{
+.groupBtn #viewCard:active{
   background-color: #C2C2C2;
 }
 
@@ -272,7 +286,7 @@ input[type="number"] {
   background-color: #0C92B7;  
 }
 
-.groupBtn #continueShopping:hover{
+.groupBtn #continueShopping:active{
   background-color: #3C7F91;  
 }
 
@@ -281,13 +295,32 @@ input[type="number"] {
   height: 15px;
 }
 
-.groupEncabezado{
-  display: flex;
-  justify-content: space-between;
-  
+/*** Fin de estilo ***/
+
+/** Estilo para el spiner del modal
+
+/* Estilo para el spinner */
+.spinner {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  margin: auto;
 }
 
-/** Fin de estilo **/
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Asegurarse de que el contenido se oculta mientras se muestra el spinner */
+.modal-content.loading #modalItems {
+  display: none;
+}
+
+
 
 /**************************************/
 .error-message {
@@ -404,19 +437,18 @@ input[type="number"] {
 <!---->
   
 <!-- El Modal mostarar elementos que agregamos al carrito -->
-
-<div id="itemModal" class="modal">
-  <div class="modal-content">
-      <div class="groupEncabezado">
-          <h2>Artículo Agregado</h2>
-          <span onclick="onclickCloseModal()" id="spanClose" class="close">&times;</span>
+<div id="background-modal" class="background-modal">
+  <div id="itemModal" class="modal">
+    <div class="modal-content">
+        <h3>Agregaste a tu carrito</h3>
+      <div id="spinner" class="spinner" style="display:none;"></div>
+      <div id="modalItems">
+        <!-- Aquí se agregarán los artículos dinámicamente -->
       </div>
-    <div id="modalItems">
-      <!-- Aquí se agregarán los artículos dinámicamente -->
-    </div>
-    <div class="groupBtn">
-      <button id="viewCard" onclick="onclickViewCard()">Ver carrito <img src="https://cdn.shopify.com/s/files/1/0812/4353/7710/files/shopping.png?v=1734627656" alt="Icono de Comparar"></button>
-      <button id="continueShopping" onclick="onclickCloseModal()">Seguir comprando</button>
+      <div class="groupBtn">
+        <button id="viewCard" onclick="onclickViewCard()">Ver carrito</button>
+        <button id="continueShopping" onclick="onclickCloseModal()">Seguir comprando</button>
+      </div>
     </div>
   </div>
 </div>

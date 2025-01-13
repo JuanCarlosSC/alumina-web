@@ -399,22 +399,10 @@ function ajustarScroll() {
 /**  Funcion para ir a la ventana del productos selecionados ( Carrito ) */
 
 function onclickViewCard() {
-	var modal = document.getElementById("itemModal");
+	//var modal = document.getElementById("itemModal");
 	window.location.href = '/cart';
 }
 
-// Fucnion para salir del modal
-function onclickCloseModal() {
-	
-	if(document.getElementsByName("item") != null){
-		console.log("Existe");
-	}
-	else {
-		console.log("No existe");
-	}
-	var modal = document.getElementById("itemModal");
-	modal.style.display = "none";
-	}
 
 // Funcoin para obtener informacion de los productos GraphQL
 async function getInfoProductGraphqlModel(variantId) {
@@ -469,20 +457,17 @@ return fetch('https://6d6410.myshopify.com/api/2024-10/graphql.json', {
 
 // Funcion cargar los datos al modal y mostrarlo
 function onclcikMostrarModalCard2(infoCompra, id, qty) {
-    let codeHtml = "";
-
 	let urlImgProduct = infoCompra.image.originalSrc;
 	let idProduct = id;
 	let name = infoCompra.product.title;
 	let noPart = infoCompra.title;
 	let index = noPart.indexOf('|');
-	noPart = noPart.substring(0,index);
 	let quantity = qty;
 	let price = Math.round((infoCompra.price.amount * quantity),2);
 	let currencyCode = infoCompra.price.currencyCode;
-  
+    let modalItems = document.getElementById("modalItems");
 	
-	let modalItems = document.getElementById("modalItems");
+	noPart = noPart.substring(0,index);
 	modalItems.innerHTML += `
 	  <div class="item">
 		<img src="${urlImgProduct}" alt="${idProduct}">
@@ -510,14 +495,42 @@ function dataModel(format){
 	}
 	
  }
-
-async function getDataModel(id, quantity){
-	let modal = document.getElementById("itemModal");
-	let datos = await getInfoProductGraphqlModel(id)
+ async function getDataModel(id, quantity) {
+	const modal = document.getElementById("itemModal");
+	const spinner = document.getElementById("spinner");
+	const modalContent = document.querySelector(".modal-content");
+  
+	// Mostrar el spinner y ocultar el contenido del modal
+	spinner.style.display = "block";
+	modalContent.classList.add("loading");
+  
+	// Obtener los datos del producto
+	const datos = await getInfoProductGraphqlModel(id);
+  
+	// Llamar a la función para mostrar el contenido del modal con los datos
 	onclcikMostrarModalCard2(datos, id, quantity);
-	debugger;
-	console.log(modal);
-	modal.style.display = "block";	
-}
+  
+	// Asegurarse de que todas las imágenes se hayan cargado
+	const images = modal.querySelectorAll("img");
+	const imageLoadPromises = Array.from(images).map((img) =>
+	  new Promise((resolve) => {
+		if (img.complete) resolve();
+		else {
+		  img.onload = resolve;
+		  img.onerror = resolve;
+		}
+	  })
+	);
+	await Promise.all(imageLoadPromises);
+  
+	// Ocultar el spinner
+	spinner.style.display = "none";
+	modalContent.classList.remove("loading");
+  
+	// Mostrar el modal con animación
+	showModal();	
+  }
+  
+  
   
 /*** Fin ***/ 
