@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', function () {
   
 	const variantRows = document.querySelectorAll('.variant-row');
@@ -137,6 +135,7 @@ function selectVariantById(variantId) {
 
 async function addMultiCart() {
     
+	dataModel(formData);
 	
 	fetch(window.Shopify.routes.root + 'cart/add.js', {
 	method: 'POST',
@@ -150,8 +149,8 @@ async function addMultiCart() {
 		throw new Error('Error en la solicitud: ' + response.statusText);
 	}
 	reloadHeader();
-	showModal();
-	//window.location.href = '/cart';	
+	//addMultiCart(formData, productID , qty)
+	// window.location.href = '/cart';	
 	return response.json();
 	})
 	.catch((error) => {
@@ -290,9 +289,13 @@ function checkTable(table){
 
 async function clikButton(){
 	var tbl = document.getElementById("ts");
+	let product = document.getElementById("h1-titulo-producto");
+	let precio =
 	formData = { items: [] };
+	datosModal = { items: [] };
 	var num;
 	var productID;
+	let qty = 0;
 
 	if(checkTableData(tbl)){
 		const [flag,input]=await productStockValidity(tbl);
@@ -303,19 +306,24 @@ async function clikButton(){
 			// var num = tbl.rows[i].cells[1].querySelector("input[type=number]");
 	
 				num = tbl.rows[i].cells[tbl.rows[i].cells.length - 1].querySelector("input.quantity");
-	
+				precio = tbl.rows[i].cells[tbl.rows[i].cells.length - 2].querySelector("input.quantity");
+	            
 				if (num?.value > 0 && num !== null) {
+					precio;
+					debugger;
 					productID = num.getAttribute("data-product-id");
 					formData.items.push({
 						'id': productID,
 						'quantity': num.value
 					});
+					
 					num.value="0";
 				}
 			
 				
 			}
-			addMultiCart();
+
+			addMultiCart() 
 		}
 		else{
 			input.classList.add('vibration', 'error-border');
@@ -385,3 +393,131 @@ function ajustarScroll() {
 		});
 	}
 }
+
+/*********  Funcion para mostrar y caragr datos al modal ***********/
+
+/**  Funcion para ir a la ventana del productos selecionados ( Carrito ) */
+
+function onclickViewCard() {
+	var modal = document.getElementById("itemModal");
+	window.location.href = '/cart';
+}
+
+// Fucnion para salir del modal
+function onclickCloseModal() {
+	
+	if(document.getElementsByName("item") != null){
+		console.log("Existe");
+	}
+	else {
+		console.log("No existe");
+	}
+	var modal = document.getElementById("itemModal");
+	modal.style.display = "none";
+	}
+
+// Funcoin para obtener informacion de los productos GraphQL
+async function getInfoProductGraphqlModel(variantId) {
+const query = `
+	{
+		node(id: "gid://shopify/ProductVariant/${variantId}")
+		{
+			... on ProductVariant {
+			title
+			price 
+				{ 
+				amount
+				currencyCode
+			}
+			product {
+				title
+			}
+			image {
+				originalSrc
+			}
+		}
+	}
+		
+}`;
+
+return fetch('https://6d6410.myshopify.com/api/2024-10/graphql.json', {
+	method: 'POST',
+	headers: {
+	'Content-Type': 'application/json',
+	'X-Shopify-Storefront-Access-Token': 'db729bb8d995194f1922fe4da617ced1',
+	},
+	body: JSON.stringify({ query: query })
+})
+.then(response => {
+	if (!response.ok) {
+	throw new Error('Error en la solicitud: ' + response.statusText);
+	}
+	return  response.json(); // Convertir la respuesta a JSON
+})
+.then(data => {
+
+	if (data.data && data.data.node) {
+	return data.data.node; // Devolver los datos necesarios si existen
+	} else {
+	throw new Error('Estructura de datos inesperada: ' + JSON.stringify(data));
+	}
+})
+.catch((error) => {
+	console.error('Error:', error);
+});
+}
+
+// Funcion cargar los datos al modal y mostrarlo
+function onclcikMostrarModalCard2(infoCompra, id, qty) {
+    let codeHtml = "";
+
+	let urlImgProduct = infoCompra.image.originalSrc;
+	let idProduct = id;
+	let name = infoCompra.product.title;
+	let noPart = infoCompra.title;
+	let index = noPart.indexOf('|');
+	noPart = noPart.substring(0,index);
+	let quantity = qty;
+	let price = Math.round((infoCompra.price.amount * quantity),2);
+	let currencyCode = infoCompra.price.currencyCode;
+  
+	
+	let modalItems = document.getElementById("modalItems");
+	modalItems.innerHTML += `
+	  <div class="item">
+		<img src="${urlImgProduct}" alt="${idProduct}">
+		<div class="item-element">
+		  <p>ID:${idProduct}</p>
+		  <p>${name}</p>
+		  <p>${noPart}</p>
+		  <p>Cantidad: ${quantity} </p>
+		  <p>Precio: $ ${price} ${currencyCode}</p>
+		</div>
+	  </div>
+	  <hr/ id="hrModal">
+	`;
+  }
+
+function dataModel(format){
+
+	for (const prop in format) {	
+		format[prop].forEach(datos => {
+			let idProduct = datos.id;
+			let quantity =  datos.quantity;
+
+			getDataModel(idProduct,  quantity);
+		});
+	}
+	
+ }
+
+async function getDataModel(id, quantity){
+	let modal = document.getElementById("itemModal");
+	let datos = await getInfoProductGraphqlModel(id)
+	onclcikMostrarModalCard2(datos, id, quantity);
+	debugger;
+	console.log(modal);
+	modal.style.display = "block";	
+}
+  
+/*** Fin ***/ 

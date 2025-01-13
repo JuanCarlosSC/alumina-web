@@ -1,11 +1,11 @@
 
 document.addEventListener("DOMContentLoaded", async function () {
-  
+
   var comboBox = document.getElementById('productVariantsCombo');
-  
+
  // Verificar que el comboBox existe
  setTimeout(() => {
-  if (comboBox) { 
+  if (comboBox) {
     handleSelection(comboBox);
   } else{console.log("No existe el elemento HTML Select")};
   }, 600);
@@ -13,48 +13,34 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function verifyExistence(productID,quantity){
- 
+
  let data = await getQuantityProductGraphql(productID);
  let verify=false;
  if(quantity <= data.quantityAvailable ){
   verify=true;
- } 
- return [verify,data.quantityAvailable]; 
- 
+ }
+ return [verify,data.quantityAvailable];
+
 }
 
 //Funcion para agregar al carrito de los porductos relacionados
 async function addCard(button) {
   var formData = { items: [] };
-  var productID = button.getAttribute('data-product-id');
-  var input = document.getElementById(`quantity-${productID}`);
+  let productID = button.getAttribute('data-product-id');
+  let input = document.getElementById(`quantity-${productID}`);
   let quantityNum = input.value;
+  let datosModal = await getInfoProductGraphqlModel(productID, quantityNum);
+  console.log(datosModal);
 
   let [stock,quantity] = await verifyExistence(productID, quantityNum);
 
-  if (quantityNum == "0" || quantityNum == "") {
-    input.classList.add('vibration', 'warning-border');
-    
-    var warningMessage = document.getElementById('warning-message');
-    warningMessage.style.display = 'block';
-    
-    setTimeout(() => {
-      input.classList.remove('vibration');
-    }, 1000);
-
-    setTimeout(() => {
-      warningMessage.style.display = 'none';
-      input.classList.remove('warning-border');
-    }, 3000);
-    input.value = "0";
-
+  if (quantityNum == "0" || quantityNum == "") { warningMessage(input,quantityNum);
   } else {
     if (stock) {
       formData.items.push({
         'id': productID,
         'quantity': quantityNum
       });
-      debugger;
       fetch(window.Shopify.routes.root + 'cart/add.js', {
         method: 'POST',
         headers: {
@@ -68,48 +54,52 @@ async function addCard(button) {
         }
         reloadHeader();
         input.value = "0";
-        showModal();
+        //showModal();
+        debugger;
+        onclcikMostrarModalCard(datosModal, productID, quantityNum);
         return response.json();
       })
       .catch((error) => {
         console.error('Error:', error);
       });
-    } else {
-      input.classList.add('vibration', 'error-border');
-
-      var errorMessage = document.getElementById('error-message');
-      errorMessage.style.display = 'block';
-
-      setTimeout(() => {
-        input.classList.remove('vibration');
-      }, 1000);
-
-      setTimeout(() => {
-        errorMessage.style.display = 'none';
-        input.classList.remove('error-border');
-      }, 3000);
-      input.value=quantity;
-    }
+    } else { errorMessage(input,quantityNum); }
   }
 }
 
-//Funcion modal para mostrar mensaje de modal
-function showModal() {
-  var modal = document.getElementById('productAddedModal');
-  var modalContent = modal.querySelector('.modal-content');
+// Funcion modal animacion mensaje de Advertancia
+function warningMessage(input, quantity){
+  input.classList.add('vibration', 'warning-border');
 
-  modal.style.display = 'block'; // Mostrar el modal
-  modalContent.classList.add('fade-in');
+    var warningMessage = document.getElementById('warning-message');
+    warningMessage.style.display = 'block';
 
-  // Ocultar el modal después de 2 segundos con animación
-  setTimeout(function() {
-    modalContent.classList.add('fade-out');
-  }, 1500);
+    setTimeout(() => {
+      input.classList.remove('vibration');
+    }, 1000);
 
-  setTimeout(function() {
-    modal.style.display = 'none';
-    modalContent.classList.remove('fade-out'); // Eliminar la clase para futuras ocasiones
-  }, 3500);
+    setTimeout(() => {
+      warningMessage.style.display = 'none';
+      input.classList.remove('warning-border');
+    }, 3000);
+    input.value = "0";
+}
+
+// Funcion modal animacion mensaje de error
+function errorMessage(input,quantity){
+  input.classList.add('vibration', 'error-border');
+
+  var errorMessage = document.getElementById('error-message');
+  errorMessage.style.display = 'block';
+
+  setTimeout(() => {
+    input.classList.remove('vibration');
+  }, 1000);
+
+  setTimeout(() => {
+    errorMessage.style.display = 'none';
+    input.classList.remove('error-border');
+  }, 3000);
+  input.value=quantity;
 }
 
 //funcion para actualizar icono del carrito
@@ -134,7 +124,7 @@ function reloadHeader() {
 
   xhr.send();
 }
- 
+
 // Función para manejar la selección del comboBox
 function handleSelection() {
   var comboBox = document.getElementById('productVariantsCombo');
@@ -144,7 +134,7 @@ function handleSelection() {
 
 async function cellRelatedProducts(indice){
   // Verifica si el índice es válido dentro del arreglo
-  
+
   if (productsVariants[indice] && productsVariants[indice].relatedProducts && indice!=-1) {
     lista = GetLstGraphQlProduct(productsVariants, indice);
 
@@ -158,7 +148,7 @@ async function cellRelatedProducts(indice){
       const numberOfListItems = listItems.length;
       if(numberOfListItems>0){
         listItems.forEach(li => li.remove());
-       
+
       }
 
       if (!container) {
@@ -178,7 +168,7 @@ async function cellRelatedProducts(indice){
         }
         li.innerHTML = `
           <div class="container-products scroll-trigger animate--slide-in">
-           <div class="element-card">
+           <div class="element-card" id=element-card-${idVariant}>
             <a href="${item[2]}"><img class="img-related-produts" src="${item[3]}" alt="${item[0]}"></a>
             <h3>${item[1]}</h3>
             <h4>${item[0]}</h4>
@@ -192,7 +182,7 @@ async function cellRelatedProducts(indice){
            <img src="https://cdn.shopify.com/s/files/1/0812/4353/7710/files/shopping.png?v=1734627656" alt="Icono de Comparar">
             </button>
            <div>
-          </div>  
+          </div>
         `;
 
         container.appendChild(li);
@@ -203,7 +193,7 @@ async function cellRelatedProducts(indice){
   } else {
     console.info(`No existen datos en el índice ${indice} o no tiene productos relacionados.`);
   }
-}   
+}
 
 // Función para obtener todos los variantes de productos
 function GetLstGraphQlProduct(lisRelatedProduts,indice) {
@@ -213,14 +203,13 @@ function GetLstGraphQlProduct(lisRelatedProduts,indice) {
     relatedproducts.forEach(lstGraph=> {
     variantRelatedproducts.push(lstGraph);
     });
-     
+
     return variantRelatedproducts;
 }
-  
+
 // Función para obtener todos los variantes de productos
 async function procesarProductos(lstGraphQl) {
     let variantRelatedproducts=[];
-    
     for(var x=0; x<lstGraphQl.length; x++){
       try{
         const data = await getProductVariantData(lstGraphQl[x]);
@@ -228,7 +217,7 @@ async function procesarProductos(lstGraphQl) {
         variantRelatedproducts.push(fila);
       }
       catch(error){
-        console.error('Error: ', error);  
+        console.error('Error: ', error);
         return;
       }
     }
@@ -243,10 +232,10 @@ async function getProductVariantData(variantId) {
         ... on ProductVariant {
         id
         title
-        sku   
-        quantityAvailable   
-        product {   
-            id  
+        sku
+        quantityAvailable
+        product {
+            id
             title
             vendor
             tags
@@ -254,9 +243,8 @@ async function getProductVariantData(variantId) {
             productType
             onlineStoreUrl
         }
-
-        image { 
-         originalSrc    
+        image {
+         originalSrc
         }
 
       }
@@ -303,7 +291,7 @@ function getQuantityProductGraphql(variantId) {
     return  response.json(); // Convertir la respuesta a JSON
   })
   .then(data => {
-  
+
 
     if (data.data && data.data.node) {
       return data.data.node; // Devolver los datos necesarios si existen
@@ -315,3 +303,110 @@ function getQuantityProductGraphql(variantId) {
     console.error('Error:', error);
   });
 }
+
+/*********  Funcion para mostrar y caragr datos al modal ***********/
+
+// Funcion para ir a la ventana del productos selecionados ( Carrito )
+function onclickViewCard() {
+  var modal = document.getElementById("itemModal");
+  window.location.href = '/cart';
+}
+
+// Fucnion para salir del modal
+function onclickCloseModal() {
+	let classe = document.querySelector('.item');
+  let modal = document.getElementById("itemModal");
+
+	if (classe != null){
+    modalItems.innerHTML = "";
+		classe.remove();
+    console.log("existe");
+	}
+	else {
+		console.log("No existe");
+	}
+
+	modal.style.display = "none";
+}
+
+// Funcoin para obtener informacion de los productos GraphQL
+async function getInfoProductGraphqlModel(variantId) {
+  const query = `
+      {
+      node(id: "gid://shopify/ProductVariant/${variantId}") {
+        ... on ProductVariant {
+          title
+          price 
+          { amount
+            currencyCode
+          }
+          product {
+            title
+          }
+          image {
+            originalSrc
+          }
+        }
+      }
+    }
+      `;
+
+  return fetch('https://6d6410.myshopify.com/api/2024-10/graphql.json', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': 'db729bb8d995194f1922fe4da617ced1',
+    },
+    body: JSON.stringify({ query: query })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Error en la solicitud: ' + response.statusText);
+    }
+    return  response.json(); // Convertir la respuesta a JSON
+  })
+  .then(data => {
+
+    if (data.data && data.data.node) {
+      return data.data.node; // Devolver los datos necesarios si existen
+    } else {
+      throw new Error('Estructura de datos inesperada: ' + JSON.stringify(data));
+    }
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}
+
+// Funcion cargar los datos al modal y mostrarlo
+function onclcikMostrarModalCard(infoCompra, id, qty) {
+ 
+  let urlImgProduct = infoCompra.image.originalSrc;
+  let idProduct = id;
+  let name = infoCompra.product.title;
+  let noPart = infoCompra.title;
+  let index = noPart.indexOf('|');
+  noPart = noPart.substring(0,index);
+  let quantity = qty;
+  let price = Math.round((infoCompra.price.amount * quantity),2);
+  let currencyCode = infoCompra.price.currencyCode;
+
+  let modal = document.getElementById("itemModal");
+  let modalItems = document.getElementById("modalItems");
+  modalItems.innerHTML = `
+    <div class="item">
+      <img src="${urlImgProduct}" alt="${idProduct}">
+      <div class="item-element">
+        <p>ID:${idProduct}</p>
+        <p>${name}</p>
+        <p>${noPart}</p>
+        <p>Cantidad: ${quantity} </p>
+        <p>Precio: $ ${price} ${currencyCode}</p>
+      </div>
+    </div>
+  `;
+  modal.style.display = "block";
+}
+
+
+/*** Fin ***/ 

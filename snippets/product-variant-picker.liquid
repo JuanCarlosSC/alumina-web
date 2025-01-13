@@ -349,10 +349,7 @@ input[type="number"] {
                          <script type="application/json">
                            {{ product.variants | json }}
                          </script>
-                       </variant-radios>
- 
- 
-                     
+                       </variant-radios>       
                    </td>
                    <td style="height: 40px; ">
                      {% comment %} <a href="#" onclick="openDetails(event,this)" style="color:#0c92b7; text-decoration: underline; cursor: default;">{{ prop }}</a> {% endcomment %}
@@ -386,18 +383,12 @@ input[type="number"] {
                        <!--Fin del Metodo -->
  
                           {% comment %} <p>{{strgId}}</p>
-                          <p>{{idProductsVariants}}</p> {% endcomment %}
-                        
+                          <p>{{idProductsVariants}}</p> {% endcomment %}  
                            <a href={{urlSTP}}>
-                           
                            <img src="{{ 'stp-icon.png' | asset_url }}"> <!--Cambiar Imagen por una que represente un archivo stp-->
- 
                          </a> 
-                        
                        </div>                    
                      </div>
- 
-                     
                  {% else %}
                    <td  style="height: 40px; text-align: center;"><label class="datas">{{ prop }}</label></td>
                  {% endif %}
@@ -406,8 +397,9 @@ input[type="number"] {
                  {%- liquid
                    assign price = variant.price | money
                    assign currency = shop.currency
-                   echo price | append: " " | append: currency | strip_html
-                 -%}
+                   -%}
+                   <!--{% comment %} echo price | append: " " | append: currency | strip_html {% endcomment %}-->
+                 <label class="precio">{{ price }}</label>
                </td>
                <td  style="height: 40px; padding: 0; width: 150px;">
                  {% comment %} <input
@@ -419,8 +411,7 @@ input[type="number"] {
                    min="0"
                  > {% endcomment %}
  
-                  <!-- Se modifico el input id="quantity" solo de lectura "El usuario podia eliminar la cantidad y los bones de incremento y decremento dejaban de funcionar correctamente"-->
-                 
+
                   <div class="custom-input">
                    <button type="button"  class="btn-decrement" onclick="btnDecrement(this)">-</button>
                    <input type="number"  data-product-id="{{variant.id}}" class="quantity" id="quantity-{{variant.id}}" value="0"  min="0">
