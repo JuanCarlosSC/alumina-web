@@ -16,119 +16,210 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+/** Estilos para la vista cart**/
+
+.box-cart2 {
+  position: fixed; 
+  top: 11rem; 
+  right: 2%; 
+  z-index: 100; 
+  width: 24%; 
+  padding: 0 3rem;
+  background-color: white; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border-radius: 8px; 
+}
+
+.box-totals{
+  display: block;
+  margin: 0 auto;
+}
+
+.total-alinght{
+  display: flex;
+  justify-content: space-between;
+}
+
+.totals__box{
+  font-size: 1.5rem;
+  line-height: 1rem;
+}
+.box-totals hr {
+  margin: 0 0 10px 0;
+  padding: 0px;
+  
+}
+.total-alinght h2 {
+  margin:1rem 0;
+  word-wrap: break-word; /* Ajusta las palabras largas */
+  word-break: break-word; /* Rompe palabras si son muy largas */
+  
+}
+
+.box-cart2 .page-width{
+  padding: 0;
+  margin: 0;
+  width: max-content;
+}
+
+@media screen and (max-width: 1530px) {
+.box-cart2{
+  display: block;
+  }
+}
+
+@media screen and (max-width: 1380px) {
+.box-cart2{
+  margin-top: 1rem;
+  width: 100%;
+  position: static;
+  background-color: white;
+  }
+}
+
+
+/** Fin **/
+
+
 {%- endstyle -%}
 
-<div class="page-width{% if cart == empty %} is-empty{% endif %}" id="main-cart-footer" data-id="{{ section.id }}">
-  <div>
-    <div class="cart__footer section-{{ section.id }}-padding">
-      {% comment %} <button type="button" class="btn ify-cart-to-quote">Add to Quote</button> {% endcomment %}
-      {%- if settings.show_cart_note -%}
-        <cart-note class="cart__note field">
-          <label for="Cart-note">{{ 'sections.cart.note' | t }}</label>
-          <textarea
-            class="text-area field__input"
-            name="note"
-            form="cart"
-            id="Cart-note"
-            placeholder="{{ 'sections.cart.note' | t }}"
-          >{{ cart.note }}</textarea>
-        </cart-note>
-      {%- endif -%}
+{%- if cart != empty -%}
 
-      <div class="cart__blocks">
-        {% for block in section.blocks %}
-          {%- case block.type -%}
-            {%- when '@app' -%}
-              {% render block %}
-            {%- when 'subtotal' -%}
-              <div class="js-contents" {{ block.shopify_attributes }}>
-                <div>
-                  {%- if cart.cart_level_discount_applications.size > 0 -%}
-                    <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
-                      {%- for discount in cart.cart_level_discount_applications -%}
-                        <li class="discounts__discount discounts__discount--position">
-                          {%- render 'icon-discount' -%}
-                          {{ discount.title }}
-                          (-{{ discount.total_allocated_amount | money }})
-                        </li>
-                      {%- endfor -%}
-                    </ul>
+  <div class="page-width">
+    <div class="box-cart2">
+     <div class="{% if cart == empty %} is-empty{% endif %}" id="main-cart-footer" data-id="{{ section.id }}">
+      <div>
+        <div class="cart__footer section-{{ section.id }}-padding">
+          {% comment %} <button type="button" class="btn ify-cart-to-quote">Add to Quote</button> {% endcomment %}
+          {%- if settings.show_cart_note -%}
+            <cart-note class="cart__note field">
+              <label for="Cart-note">{{ 'sections.cart.note' | t }}</label>
+              <textarea
+                class="text-area field__input"
+                name="note"
+                form="cart"
+                id="Cart-note"
+                placeholder="{{ 'sections.cart.note' | t }}"
+              >{{ cart.note }}</textarea>
+            </cart-note>
+          {%- endif -%}
+
+          <div class="cart__blocks">
+            {% for block in section.blocks %}
+              {%- case block.type -%}
+                {%- when '@app' -%}
+                  {% render block %}
+                {%- when 'subtotal' -%}
+                  <div class="js-contents" {{ block.shopify_attributes }}>
+                    <div>
+                      {%- if cart.cart_level_discount_applications.size > 0 -%}
+                        <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                          {%- for discount in cart.cart_level_discount_applications -%}
+                            <li class="discounts__discount discounts__discount--position">
+                              {%- render 'icon-discount' -%}
+                              {{ discount.title }}
+                              (-{{ discount.total_allocated_amount | money }})
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </div>
+                    <div class="total-alinght">
+                      <h2>Resumen de compra</h2>
+                      </div>
+                      <div class="box-totals">
+                        <hr>
+                        <div class="total-alinght">
+                        <h2 class="totals__box">Productos ({{ cart.item_count }})</h2>
+                        <h2 class="totals__box">{{ cart.total_price | money_with_currency }}</h2>
+                      </div>
+                      <div class="total-alinght">
+                        <h2 class="totals__box">Costo de envio:</h2>
+                        <h2 class="totals__box">$ 0.00</h2>
+                      </div>
+                      <div class="total-alinght">
+                        <h2 class="totals__box">Total:</h2>
+                        <h2 class="totals__box">{{ cart.total_price | money_with_currency }}</h2>
+                      </div>
+                    </div>
+
+                  {% comment %}Bloque de codigo original de la vista Cart 
+                      <div class="totals"></div>
+                      <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }} {{ cart.total_price | money_with_currency }}</h2> 
+                      <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p> 
+                    </div>{% endcomment %}
+
+                    {% comment %} <small class="tax-note caption-large rte">
+                      {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                        {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                      {%- elsif cart.taxes_included -%}
+                        {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+                      {%- elsif shop.shipping_policy.body != blank -%}
+                        {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+                      {%- else -%}
+                        {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+                      {%- endif -%}
+                    </small> {% endcomment %}
+                  </div>
+                {%- else -%}
+                  <div class="cart__ctas" {{ block.shopify_attributes }}>
+                    <noscript>
+                      <button type="submit" class="cart__update-button button button--secondary" form="cart">
+                        {{ 'sections.cart.update' | t }}
+                      </button>
+                    </noscript>
+
+                    
+                    <button
+                      type="submit"
+                      id="checkout"
+                      class="cart__checkout-button button"
+                      name="checkout"
+                      {% if cart == empty %}
+                        disabled
+                      {% endif %}
+                      form="cart"
+                    >
+                      {{ 'sections.cart.checkout' | t }}
+                    </button>
+
+                    {% comment %} <button
+                      type="submit"
+                      id="checkout"
+                      class="cart__checkout-button button"
+                      name="checkout"
+                      {% if cart == empty %}
+                        disabled
+                      {% endif %}
+                      form="cart"
+                    >
+                      Solicitar cotización
+                    </button> {% endcomment %}
+    
+                    
+            {% comment %} <label style="display:none" id="idCustomer">{{ customer.id }}</label>
+            <label style="display:none" id="dataCart">{{ cart.items | json }}</label>
+            <button class="cart__checkout-button button" type="button" onclick="enviarFormulario()">Solicitar cotización</button> {% endcomment %}
+          
+                  </div>
+
+                  {%- if additional_checkout_buttons -%}
+                    <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
+                      {{ content_for_additional_checkout_buttons }}
+                    </div>
                   {%- endif -%}
-                </div>
+              {%- endcase -%}
+            {% endfor %}
 
-                <div class="totals">
-                  <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>
-                  <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p>
-                </div>
-
-                <small class="tax-note caption-large rte">
-                  {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                    {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                  {%- elsif cart.taxes_included -%}
-                    {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
-                  {%- elsif shop.shipping_policy.body != blank -%}
-                    {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-                  {%- else -%}
-                    {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
-                  {%- endif -%}
-                </small>
-              </div>
-            {%- else -%}
-              <div class="cart__ctas" {{ block.shopify_attributes }}>
-                <noscript>
-                  <button type="submit" class="cart__update-button button button--secondary" form="cart">
-                    {{ 'sections.cart.update' | t }}
-                  </button>
-                </noscript>
-
-                
-                <button
-                  type="submit"
-                  id="checkout"
-                  class="cart__checkout-button button"
-                  name="checkout"
-                  {% if cart == empty %}
-                    disabled
-                  {% endif %}
-                  form="cart"
-                >
-                  {{ 'sections.cart.checkout' | t }}
-                </button>
-
-                {% comment %} <button
-                  type="submit"
-                  id="checkout"
-                  class="cart__checkout-button button"
-                  name="checkout"
-                  {% if cart == empty %}
-                    disabled
-                  {% endif %}
-                  form="cart"
-                >
-                  Solicitar cotización
-                </button> {% endcomment %}
- 
-                
-        {% comment %} <label style="display:none" id="idCustomer">{{ customer.id }}</label>
-				<label style="display:none" id="dataCart">{{ cart.items | json }}</label>
-				<button class="cart__checkout-button button" type="button" onclick="enviarFormulario()">Solicitar cotización</button> {% endcomment %}
-			
-              </div>
-
-              {%- if additional_checkout_buttons -%}
-                <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
-                  {{ content_for_additional_checkout_buttons }}
-                </div>
-              {%- endif -%}
-          {%- endcase -%}
-        {% endfor %}
-
-        <div id="cart-errors"></div>
+            <div id="cart-errors"></div>
+          </div>
+        </div>
       </div>
     </div>
+    </div>  
   </div>
-</div>
 
+{%- endif -%}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     function isIE() {
